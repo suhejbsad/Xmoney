@@ -1,131 +1,209 @@
-[html code.txt](https://github.com/user-attachments/files/23842746/html.code.txt)
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Xmoney Dashboard</title>
-  <style>
-    /* General Styles */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9fafb;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xmoney</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&family=Cinzel:wght@600&display=swap" rel="stylesheet">
+<style>
 
-    .container {
-      padding: 24px;
-      max-width: 1200px;
-      margin: auto;
-    }
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Poppins', sans-serif;
+}
 
-    h1 {
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin-bottom: 1.5rem;
-    }
+body {
+background: #000;
+color: white;
+overflow-x: hidden;
+}
 
-    p {
-      font-size: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
+/* Background Chart */
+canvas {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+filter: blur(3px);
+opacity: 0.8;
+}
 
-    /* Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
+/* Main Container */
+.container {
+text-align: center;
+padding: 100px 20px;
+}
 
-    @media (min-width: 768px) {
-      .grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
+/* Xmoney Title */
+.title {
+font-size: 60px;
+font-weight: 800;
+position: relative;
+opacity: 0;
+transform: translateX(-100%);
+animation: slideIn 1.5s forwards;
+}
 
-    /* Card */
-    .card {
-      background-color: white;
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
+/* Shine Effect */
+.title::after {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 50%;
+height: 100%;
+background: linear-gradient(120deg, transparent, rgba(255,255,255,0.8), transparent);
+animation: shine 3s infinite;
+}
 
-    .card h2 {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
+@keyframes shine {
+0% { left: -100%; }
+50% { left: 120%; }
+100% { left: 120%; }
+}
 
-    /* Buttons */
-    .btn {
-      display: inline-block;
-      text-decoration: none;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 1rem;
-      margin-top: 1rem;
-      text-align: center;
-      width: 100%;
-      transition: background 0.3s;
-    }
+/* Subtitle */
+.subtitle {
+margin-top: 20px;
+font-size: 20px;
+opacity: 0;
+transform: translateX(-100%);
+animation: slideIn 1.5s forwards;
+}
 
-    .btn-black { background-color: black; }
-    .btn-green { background-color: #16a34a; }
-    .btn-red   { background-color: #dc2626; }
-    .btn-blue  { background-color: #2563eb; }
+.subtitle:nth-child(2) { animation-delay: 0.5s; }
+.subtitle:nth-child(3) { animation-delay: 0.8s; }
+.subtitle:nth-child(4) { animation-delay: 1.1s; }
 
-    /* Membership Section */
-    .membership {
-      margin-top: 2.5rem;
-      padding: 1.5rem;
-      background-color: #fef3c7;
-      border-radius: 1rem;
-      text-align: center;
-    }
+@keyframes slideIn {
+to {
+opacity: 1;
+transform: translateX(0);
+}
+}
 
-    .membership .btn {
-      width: auto;
-      padding: 0.75rem 1.5rem;
-      font-size: 1.125rem;
-    }
-  </style>
+/* VIP Card */
+.vip-card {
+margin: 80px auto;
+background: rgba(0,0,0,0.8);
+padding: 40px;
+width: 90%;
+max-width: 400px;
+border-radius: 15px;
+box-shadow: 0 0 30px rgba(0,0,0,0.8);
+transition: 0.4s;
+}
+
+.vip-card:hover {
+transform: translateY(-10px);
+box-shadow: 0 0 40px gold;
+}
+
+.vip-title {
+font-family: 'Cinzel', serif;
+font-size: 28px;
+margin-bottom: 20px;
+}
+
+.vip-text {
+margin: 10px 0;
+opacity: 0;
+transform: translateX(-100%);
+animation: slideIn 1.5s forwards;
+}
+
+.vip-text:nth-child(2) { animation-delay: 1.2s; }
+.vip-text:nth-child(3) { animation-delay: 1.5s; }
+.vip-text:nth-child(4) { animation-delay: 1.8s; }
+
+.join-btn {
+margin-top: 20px;
+padding: 12px 30px;
+background: gray;
+border: none;
+border-radius: 8px;
+color: white;
+font-size: 16px;
+cursor: pointer;
+transition: 0.3s;
+}
+
+.join-btn:hover {
+background: gold;
+color: black;
+}
+
+/* Responsive */
+@media(max-width:768px){
+.title { font-size: 40px; }
+.subtitle { font-size: 16px; }
+}
+
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Dashboard - Xmoney</h1>
-    <p>Welcome to the next level of business collaboration with <strong>Xmoney</strong>. Your membership unlocks exclusive tools and services.</p>
 
-    <div class="grid">
-      <!-- 2 Logos -->
-      <div class="card">
-        <h2>2 Professional Logos – $5</h2>
-        <p>Get 2 custom logos for your business.</p>
-        <a href="https://whop.com/checkout/plan_QOybDJlOSXgGn" target="_blank" class="btn btn-black">Order Logos</a>
-      </div>
+<canvas id="chart"></canvas>
 
-      <!-- Business Ideas -->
-      <div class="card">
-        <h2>Business Ideas – $10</h2>
-        <p>Receive unique ideas to grow your business.</p>
-        <a href="https://whop.com/checkout/plan_P7lCCHZ89ZLDj" target="_blank" class="btn btn-green">Get Ideas</a>
-      </div>
+<div class="container">
 
-      <!-- Premium Video Editing -->
-      <div class="card">
-        <h2>Premium Video Editing (20s) – $10</h2>
-        <p>High-quality 20-second marketing video for your business.</p>
-        <a href="https://whop.com/checkout/plan_KHyI8qQTLoyqk" target="_blank" class="btn btn-red">Order Video</a>
-      </div>
-    </div>
+<h1 class="title">Xmoney</h1>
 
-    <!-- Membership Section -->
-    <div class="membership">
-      <h2>Xmoney Membership – $19.99 per business</h2>
-      <p>Unlock access to the full platform, including all tools and priority support.</p>
-      <a href="https://whop.com/checkout/plan_fenfmpRiZGQCn" target="_blank" class="btn btn-blue">Join Membership</a>
-    </div>
-  </div>
-</body>
-</html>
+<p class="subtitle">The Billionaire Circle</p>
+<p class="subtitle">We Print Money Like a Factory</p>
+<p class="subtitle">Forex Is Our Game</p>
+
+<div class="vip-card">
+<h2 class="vip-title">VIP ZONE</h2>
+<p class="vip-text">1 - Daily Forex Signals</p>
+<p class="vip-text">2 - 55% - 60% Guaranteed Win Rate</p>
+<p class="vip-text">3 - 3 Signals Per Day (Sometimes More)</p>
+
+<button class="join-btn" onclick="joinVIP()">JOIN</button>
+</div>
+
+</div>
+
+<script>
+const canvas = document.getElementById("chart");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let candles = [];
+
+function generateCandles(){
+candles = [];
+for(let i=0; i<50; i++){
+let height = Math.random()*100+20;
+let type = Math.random() > 0.5 ? "buy" : "sell";
+candles.push({x: i*20, height, type});
+}
+}
+
+function drawCandles(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+candles.forEach(c=>{
+ctx.fillStyle = c.type === "buy" ? "gold" : "white";
+ctx.fillRect(c.x, canvas.height/2 - c.height/2, 10, c.height);
+});
+}
+
+function animate(){
+drawCandles();
+candles.forEach(c=>{
+c.height += (Math.random()-0.5)*5;
+});
+requestAnimationFrame(animate);
+}
+
+generateCandles();
+animate();
+
+/* JOIN BUTTON - Payment Link Placeholder */
+function joinVIP(){
