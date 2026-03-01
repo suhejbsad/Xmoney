@@ -50,94 +50,88 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 
 <script>
 const canvas = document.getElementById("bgCanvas");
-const gl = canvas.getContext("webgl");
+const ctx = canvas.getContext("2d");
 
 function resize(){
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);
 }
 resize();
 window.addEventListener("resize", resize);
 
-const vertexShaderSource = `
-attribute vec2 position;
-void main(){
-  gl_Position = vec4(position,0.0,1.0);
-}
-`;
+/* =========================
+   NEURAL NETWORK ENGINE
+   ========================= */
 
-const fragmentShaderSource = `
-precision highp float;
-uniform vec2 u_resolution;
-uniform float u_time;
+const nodes = [];
+const NODE_COUNT = 120;
+const MAX_DISTANCE = 150;
 
-float random(vec2 st){
-    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
-}
-
-void main(){
-    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-    uv -= 0.5;
-    uv.x *= u_resolution.x / u_resolution.y;
-
-    float t = u_time * 2.0;
-
-    float wave = sin(uv.x*20.0 + t) * cos(uv.y*15.0 - t);
-    float energy = abs(wave);
-
-    float glow = 0.02 / (abs(wave) + 0.02);
-
-    vec3 base = vec3(0.0, 0.0, 0.05);
-    vec3 electric = vec3(0.0,0.8,1.0) * glow * 2.0;
-
-    vec3 color = base + electric * energy;
-
-    gl_FragColor = vec4(color,1.0);
-}
-`;
-
-function createShader(type, source){
-  const shader = gl.createShader(type);
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-  return shader;
+for(let i=0;i<NODE_COUNT;i++){
+  nodes.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    vx: (Math.random()-0.5)*0.7,
+    vy: (Math.random()-0.5)*0.7,
+    pulse: Math.random()*Math.PI*2
+  });
 }
 
-const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
-const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-const program = gl.createProgram();
-gl.attachShader(program, vertexShader);
-gl.attachShader(program, fragmentShader);
-gl.linkProgram(program);
-gl.useProgram(program);
+  // dark gradient
+  const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+  gradient.addColorStop(0,"#050510");
+  gradient.addColorStop(1,"#000000");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-const positionBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-  -1,-1,
-   1,-1,
-  -1, 1,
-  -1, 1,
-   1,-1,
-   1, 1
-]), gl.STATIC_DRAW);
+  // update + draw lines
+  for(let i=0;i<nodes.length;i++){
+    let n = nodes[i];
 
-const positionLocation = gl.getAttribLocation(program,"position");
-gl.enableVertexAttribArray(positionLocation);
-gl.vertexAttribPointer(positionLocation,2,gl.FLOAT,false,0,0);
+    n.x += n.vx;
+    n.y += n.vy;
 
-const resolutionLocation = gl.getUniformLocation(program,"u_resolution");
-const timeLocation = gl.getUniformLocation(program,"u_time");
+    if(n.x<0||n.x>canvas.width) n.vx*=-1;
+    if(n.y<0||n.y>canvas.height) n.vy*=-1;
 
-function render(time){
-  gl.uniform2f(resolutionLocation,canvas.width,canvas.height);
-  gl.uniform1f(timeLocation,time*0.001);
-  gl.drawArrays(gl.TRIANGLES,0,6);
-  requestAnimationFrame(render);
+    for(let j=i+1;j<nodes.length;j++){
+      let n2 = nodes[j];
+      let dx = n.x - n2.x;
+      let dy = n.y - n2.y;
+      let dist = Math.sqrt(dx*dx+dy*dy);
+
+      if(dist < MAX_DISTANCE){
+        ctx.strokeStyle = "rgba(0,200,255,"+(1-dist/MAX_DISTANCE)+")";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(n.x,n.y);
+        ctx.lineTo(n2.x,n2.y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // draw nodes
+  nodes.forEach(n=>{
+    n.pulse += 0.05;
+    let glow = 2 + Math.sin(n.pulse)*1.5;
+
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,glow,0,Math.PI*2);
+    ctx.fillStyle = "rgba(0,255,255,0.9)";
+    ctx.shadowColor = "cyan";
+    ctx.shadowBlur = 15;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  });
+
+  requestAnimationFrame(animate);
 }
-requestAnimationFrame(render);
+
+animate();
 
 function joinVIP(){ alert("Welcome to the VIP zone!"); }
 </script>
