@@ -100,16 +100,6 @@
             box-shadow: 0 20px 50px rgba(0, 242, 255, 0.15);
         }
 
-        .vip-title {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 28px;
-            margin-bottom: 30px;
-            letter-spacing: 6px;
-            color: var(--cyan);
-            text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
-            text-align: center;
-        }
-
         .features-list { list-style: none; text-align: center; margin-bottom: 30px; }
         .features-list li {
             padding: 15px 0;
@@ -190,7 +180,6 @@
     </div>
 
     <div class="vip-card">
-        <h2 class="vip-title">VIP ZONE</h2>
         <ul class="features-list">
             <li>Daily Forex Signals</li>
             <li>57% - 60% Guaranteed Win Rate</li>
@@ -291,7 +280,6 @@
 
     function joinVIP() {
         document.querySelector('.vip-card').style.transform = "scale(0.95)";
-        // No alert here so the user goes straight to your Whop page
     }
 
     init();
