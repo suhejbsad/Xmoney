@@ -51,52 +51,109 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 <script>
 const canvas = document.getElementById("bgCanvas");
 const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
 
-// Smooth gradient background
-const gradientColors = ["#0f2027","#203a43","#2c5364"];
-function drawGradient(){
-    const gradient = ctx.createLinearGradient(0,0,canvas.width,canvas.height);
-    gradientColors.forEach((color,i)=>{
-        gradient.addColorStop(i/(gradientColors.length-1), color);
+function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+/* ===============================
+   ULTRA REALISTIC 4K SPACE ENGINE
+   =============================== */
+
+let stars = [];
+let nebulaParticles = [];
+let time = 0;
+
+for(let i=0;i<600;i++){
+    stars.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        size:Math.random()*1.5,
+        speed:Math.random()*0.3 + 0.05
     });
+}
+
+for(let i=0;i<120;i++){
+    nebulaParticles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        radius:Math.random()*400 + 200,
+        hue:200 + Math.random()*80,
+        alpha:Math.random()*0.08
+    });
+}
+
+function drawDeepSpaceGradient(){
+    let gradient = ctx.createRadialGradient(
+        canvas.width/2,
+        canvas.height/2,
+        0,
+        canvas.width/2,
+        canvas.height/2,
+        canvas.width
+    );
+
+    gradient.addColorStop(0,"#05070d");
+    gradient.addColorStop(0.4,"#0b1320");
+    gradient.addColorStop(0.7,"#090a14");
+    gradient.addColorStop(1,"#000000");
+
     ctx.fillStyle = gradient;
     ctx.fillRect(0,0,canvas.width,canvas.height);
 }
 
-// Stars
-let stars = [];
-for(let i=0;i<250;i++){
-    stars.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        r:Math.random()*1.5+0.5,
-        speed:Math.random()*0.2+0.05
+function drawNebula(){
+    nebulaParticles.forEach(p=>{
+        let gradient = ctx.createRadialGradient(
+            p.x + Math.sin(time*0.0002)*200,
+            p.y + Math.cos(time*0.00015)*200,
+            0,
+            p.x,
+            p.y,
+            p.radius
+        );
+
+        gradient.addColorStop(0,`hsla(${p.hue},100%,60%,${p.alpha})`);
+        gradient.addColorStop(1,"transparent");
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+        ctx.fill();
+    });
+}
+
+function drawStars(){
+    stars.forEach(s=>{
+        s.y -= s.speed;
+        if(s.y < 0){
+            s.y = canvas.height;
+            s.x = Math.random()*canvas.width;
+        }
+
+        ctx.beginPath();
+        ctx.fillStyle="white";
+        ctx.shadowColor="white";
+        ctx.shadowBlur=8;
+        ctx.arc(s.x,s.y,s.size,0,Math.PI*2);
+        ctx.fill();
+        ctx.shadowBlur=0;
     });
 }
 
 function animate(){
-    drawGradient();
-    
-    // Draw and move stars
-    stars.forEach(s=>{
-        s.y -= s.speed;
-        if(s.y<0) s.y=canvas.height;
-        ctx.fillStyle="white";
-        ctx.beginPath();
-        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fill();
-    });
-    
+    time += 1;
+    drawDeepSpaceGradient();
+    drawNebula();
+    drawStars();
     requestAnimationFrame(animate);
 }
+
 animate();
 
-window.addEventListener("resize",()=>{
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
 function joinVIP(){ alert("Welcome to the VIP zone!"); }
 </script>
 
