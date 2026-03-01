@@ -136,6 +136,9 @@
             letter-spacing: 2px;
             cursor: pointer;
             transition: 0.4s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
         }
 
         .join-btn:hover {
@@ -193,7 +196,7 @@
             <li>57% - 60% Guaranteed Win Rate</li>
             <li>3 Signals Per Day (Sometimes More)</li>
         </ul>
-        <button class="join-btn" onclick="joinVIP()">Claim Access</button>
+        <a href="https://whop.com/xmoney-1/xmoney-ed/" class="join-btn" onclick="joinVIP()">Claim Access</a>
         <div id="memberCounter">0 Elite Members</div>
     </div>
 </div>
@@ -288,9 +291,7 @@
 
     function joinVIP() {
         document.querySelector('.vip-card').style.transform = "scale(0.95)";
-        setTimeout(() => {
-            alert("ACCESS GRANTED. WELCOME TO THE FRONT LINE.");
-        }, 200);
+        // No alert here so the user goes straight to your Whop page
     }
 
     init();
