@@ -13,9 +13,12 @@ body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .container {text-align:center; padding:40px 20px; position:relative; z-index:1; perspective:1500px;}
 
-/* ========================= */
+
+  
 /* XMONEY SUPER HERO TITLE  */
-/* ========================= */
+
+
+  
 .title {
   position:relative;
   display:block;
