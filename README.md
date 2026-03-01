@@ -17,7 +17,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .subtitle:nth-child(3){animation-delay:0.8s;}
 .subtitle:nth-child(4){animation-delay:1.1s;}
 @keyframes slideIn {to{opacity:1; transform:translateY(0);}}
-.vip-card {margin:80px auto;background:rgba(255,255,255,0.05);padding:40px;width:90%;max-width:400px;border-radius:15px;box-shadow:0 0 30px rgba(0,0,0,0.8);transition:0.4s;backdrop-filter:blur(5px);}
+.vip-card {margin:80px auto;background:rgba(255,255,255,0.05);padding:40px;width:90%;max-width:400px;border-radius:15px;box-shadow:0 0 30px rgba(0,0,0,0.8);transition:0.4s;backdrop-filter:blur(8px);}
 .vip-card:hover{transform:translateY(-10px);box-shadow:0 0 40px rgba(255,255,255,0.2);}
 .vip-title{font-family:'Cinzel', serif;font-size:28px;margin-bottom:20px;color:#fff;}
 .vip-text{margin:10px 0;opacity:0;transform:translateY(20px);animation:slideIn 1.5s forwards;color:#eee;}
@@ -59,96 +59,48 @@ function resizeCanvas(){
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-/* ===============================
-   ULTRA REALISTIC 4K SPACE ENGINE
-   =============================== */
+/* ===========================
+   FLUID LIQUID WAVE ENGINE
+   =========================== */
 
-let stars = [];
-let nebulaParticles = [];
 let time = 0;
 
-for(let i=0;i<600;i++){
-    stars.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        size:Math.random()*1.5,
-        speed:Math.random()*0.3 + 0.05
-    });
-}
+function drawFluidBackground(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
-for(let i=0;i<120;i++){
-    nebulaParticles.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        radius:Math.random()*400 + 200,
-        hue:200 + Math.random()*80,
-        alpha:Math.random()*0.08
-    });
-}
-
-function drawDeepSpaceGradient(){
-    let gradient = ctx.createRadialGradient(
-        canvas.width/2,
-        canvas.height/2,
-        0,
-        canvas.width/2,
-        canvas.height/2,
-        canvas.width
-    );
-
-    gradient.addColorStop(0,"#05070d");
-    gradient.addColorStop(0.4,"#0b1320");
-    gradient.addColorStop(0.7,"#090a14");
-    gradient.addColorStop(1,"#000000");
-
+    // Deep gradient base
+    let gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+    gradient.addColorStop(0,"#0f2027");
+    gradient.addColorStop(0.5,"#203a43");
+    gradient.addColorStop(1,"#2c5364");
     ctx.fillStyle = gradient;
     ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    drawWave(0.6, 40, 0.002, "rgba(0,255,255,0.15)");
+    drawWave(0.5, 60, 0.0015, "rgba(0,150,255,0.12)");
+    drawWave(0.4, 80, 0.001, "rgba(0,100,255,0.10)");
 }
 
-function drawNebula(){
-    nebulaParticles.forEach(p=>{
-        let gradient = ctx.createRadialGradient(
-            p.x + Math.sin(time*0.0002)*200,
-            p.y + Math.cos(time*0.00015)*200,
-            0,
-            p.x,
-            p.y,
-            p.radius
-        );
+function drawWave(speed, amplitude, frequency, color){
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height);
 
-        gradient.addColorStop(0,`hsla(${p.hue},100%,60%,${p.alpha})`);
-        gradient.addColorStop(1,"transparent");
+    for(let x = 0; x <= canvas.width; x++){
+        let y = canvas.height/2 +
+                Math.sin((x * frequency) + time * speed) * amplitude;
+        ctx.lineTo(x, y);
+    }
 
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
-        ctx.fill();
-    });
-}
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.closePath();
 
-function drawStars(){
-    stars.forEach(s=>{
-        s.y -= s.speed;
-        if(s.y < 0){
-            s.y = canvas.height;
-            s.x = Math.random()*canvas.width;
-        }
-
-        ctx.beginPath();
-        ctx.fillStyle="white";
-        ctx.shadowColor="white";
-        ctx.shadowBlur=8;
-        ctx.arc(s.x,s.y,s.size,0,Math.PI*2);
-        ctx.fill();
-        ctx.shadowBlur=0;
-    });
+    ctx.fillStyle = color;
+    ctx.fill();
 }
 
 function animate(){
     time += 1;
-    drawDeepSpaceGradient();
-    drawNebula();
-    drawStars();
+    drawFluidBackground();
     requestAnimationFrame(animate);
 }
 
