@@ -91,100 +91,80 @@ resize();
 window.addEventListener("resize", resize);
 
 /* =========================
-   ULTRA REALISTIC SHARK INTRO
+   EXTREME LIGHTNING INTRO
    ========================= */
 
-let intro = true;
-let startTime = null;
-let angle = 0;
-let zoom = 1;
+let introStart = null;
+let introActive = true;
+let flash = 0;
+let shockwaveRadius = 0;
 
-function drawRealisticShark(cx,cy,scale,open){
-  ctx.save();
-  ctx.translate(cx,cy);
-  ctx.scale(scale,scale);
-  ctx.rotate(angle);
-
-  let bodyGrad = ctx.createLinearGradient(-300,-100,300,100);
-  bodyGrad.addColorStop(0,"#0a1a22");
-  bodyGrad.addColorStop(0.5,"#2f4f5f");
-  bodyGrad.addColorStop(1,"#0a1a22");
-  ctx.fillStyle = bodyGrad;
-
-  ctx.beginPath();
-  ctx.ellipse(0,0,320,90,0,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.moveTo(-50,-90);
-  ctx.lineTo(40,-200);
-  ctx.lineTo(120,-90);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.moveTo(-280,0);
-  ctx.lineTo(-380,-80);
-  ctx.lineTo(-350,0);
-  ctx.lineTo(-380,80);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.fillStyle="white";
-  ctx.beginPath();
-  ctx.arc(150,-20,12,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.fillStyle="black";
-  ctx.beginPath();
-  ctx.arc(155,-20,6,0,Math.PI*2);
-  ctx.fill();
-
-  if(open){
-    ctx.fillStyle="black";
-    ctx.beginPath();
-    ctx.ellipse(300,0,120,70,0,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillStyle="white";
-    for(let i=-50;i<=50;i+=20){
-      ctx.beginPath();
-      ctx.moveTo(260,i);
-      ctx.lineTo(280,i-15);
-      ctx.lineTo(300,i);
-      ctx.closePath();
-      ctx.fill();
-    }
-  }
-
-  ctx.restore();
-}
-
-function sharkIntro(timestamp){
-  if(!startTime) startTime=timestamp;
-  let elapsed = timestamp-startTime;
+function lightningIntro(timestamp){
+  if(!introStart) introStart = timestamp;
+  let elapsed = timestamp - introStart;
 
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle="black";
+
+  // Dark storm background
+  let storm = ctx.createRadialGradient(
+    canvas.width/2, canvas.height/2, 0,
+    canvas.width/2, canvas.height/2, canvas.height
+  );
+  storm.addColorStop(0,"#0a0f1f");
+  storm.addColorStop(1,"#000000");
+  ctx.fillStyle = storm;
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  if(elapsed<3000){
-    angle+=0.3;
-    let r = Math.min(canvas.width,canvas.height)/3;
-    let x = canvas.width/2 + Math.cos(elapsed*0.01)*r;
-    let y = canvas.height/2 + Math.sin(elapsed*0.01)*r;
-    drawRealisticShark(x,y,0.6,false);
-    requestAnimationFrame(sharkIntro);
+  if(elapsed < 1200){
+    // energy build
+    let glow = 20 + Math.sin(elapsed*0.02)*20;
+    ctx.beginPath();
+    ctx.arc(canvas.width/2,canvas.height/2,glow,0,Math.PI*2);
+    ctx.fillStyle="rgba(0,200,255,0.6)";
+    ctx.shadowColor="#00eaff";
+    ctx.shadowBlur=40;
+    ctx.fill();
+    ctx.shadowBlur=0;
   }
-  else if(elapsed<4500){
-    zoom+=0.05;
-    drawRealisticShark(canvas.width/2,canvas.height/2,zoom,true);
-    requestAnimationFrame(sharkIntro);
+
+  else if(elapsed < 2200){
+    // lightning strike
+    ctx.strokeStyle="#00eaff";
+    ctx.lineWidth=4;
+    ctx.beginPath();
+    ctx.moveTo(canvas.width/2,0);
+    for(let i=0;i<10;i++){
+      ctx.lineTo(
+        canvas.width/2 + (Math.random()-0.5)*60,
+        canvas.height*(i/10)
+      );
+    }
+    ctx.lineTo(canvas.width/2,canvas.height/2);
+    ctx.stroke();
+
+    flash = 1;
+    shockwaveRadius += 25;
+
+    ctx.beginPath();
+    ctx.arc(canvas.width/2,canvas.height/2,shockwaveRadius,0,Math.PI*2);
+    ctx.strokeStyle="rgba(0,200,255,"+(1-shockwaveRadius/800)+")";
+    ctx.lineWidth=6;
+    ctx.stroke();
   }
+
+  else if(elapsed < 3000){
+    flash -= 0.05;
+    ctx.fillStyle="rgba(255,255,255,"+flash+")";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+  }
+
   else{
-    intro=false;
+    introActive=false;
     animate();
+    return;
   }
+
+  requestAnimationFrame(lightningIntro);
 }
 
 /* =========================
@@ -252,7 +232,7 @@ function animate(){
   requestAnimationFrame(animate);
 }
 
-requestAnimationFrame(sharkIntro);
+requestAnimationFrame(lightningIntro);
 
 /* COUNTER */
 const counterEl = document.getElementById("memberCounter");
