@@ -14,68 +14,76 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .container {text-align:center; padding:120px 20px; position:relative; z-index:1; perspective:1500px;}
 
 /* ========================= */
-/* ULTRA LUXURY Xmoney      */
+/* XMONEY LUXURY LIGHT SWEEP */
 /* ========================= */
 
 .title {
+  position:relative;
+  display:inline-block;
   font-family:'Montserrat', sans-serif;
   font-weight:200;
-  font-size:520px; /* 5x massive */
-  letter-spacing:12px;
+  font-size:520px;
+  letter-spacing:14px;
   color:#ffffff;
-
-  transform-style:preserve-3d;
-  animation:
-    titleAppear 2s ease forwards,
-    cinematicFloat 8s ease-in-out infinite;
-
-  text-shadow:
-    0 5px 15px rgba(0,0,0,0.5),
-    0 15px 40px rgba(0,0,0,0.6);
+  text-transform:uppercase;
+  overflow:hidden;
+  animation:fadeIn 2s ease forwards;
   opacity:0;
 }
 
-@keyframes titleAppear {
-  from {opacity:0; transform:translateY(60px) scale(0.9);}
-  to {opacity:1; transform:translateY(0) scale(1);}
+/* Light sweep animation */
+.title::after {
+  content:"";
+  position:absolute;
+  top:0;
+  left:-150%;
+  width:80%;
+  height:100%;
+  background:linear-gradient(
+    120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.4) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  transform:skewX(-25deg);
+  animation:shine 4s infinite;
 }
 
-/* Smooth cinematic 3D motion */
-@keyframes cinematicFloat {
-  0%   {transform:rotateX(0deg) rotateY(0deg);}
-  25%  {transform:rotateX(5deg) rotateY(-8deg);}
-  50%  {transform:rotateX(0deg) rotateY(0deg);}
-  75%  {transform:rotateX(-5deg) rotateY(8deg);}
-  100% {transform:rotateX(0deg) rotateY(0deg);}
+@keyframes shine {
+  0% { left:-150%; }
+  100% { left:150%; }
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(40px);}
+  to {opacity:1; transform:translateY(0);}
 }
 
 /* ========================= */
-/* SUBTITLES SMALLER & CLEAN */
+/* SUBTITLES CLEAN SMALLER   */
 /* ========================= */
 
 .subtitle {
   margin-top:15px;
-  font-size:18px; /* më të vogla */
+  font-size:18px;
   font-weight:300;
   letter-spacing:3px;
   color:#e6faff;
-
   opacity:0;
-  animation:subtitleWave 2s ease forwards;
+  animation:subtitleFade 2s ease forwards;
 }
 
 .subtitle:nth-child(2){animation-delay:0.8s;}
 .subtitle:nth-child(3){animation-delay:1.2s;}
 .subtitle:nth-child(4){animation-delay:1.6s;}
 
-@keyframes subtitleWave {
-  0% {opacity:0; transform:translateY(30px);}
-  50% {transform:translateY(-8px);}
-  100% {opacity:1; transform:translateY(0);}
+@keyframes subtitleFade {
+  from {opacity:0; transform:translateY(20px);}
+  to {opacity:1; transform:translateY(0);}
 }
 
 /* ========================= */
-/* VIP CARD (unchanged)     */
+/* VIP CARD (UNCHANGED)     */
 /* ========================= */
 
 .vip-card {margin:80px auto;background:rgba(0,0,0,0.3);border:2px solid #0ff;padding:40px;width:90%;max-width:400px;border-radius:18px;box-shadow:0 0 30px #0ff;backdrop-filter:blur(12px);transition:0.5s;}
@@ -111,7 +119,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 <canvas id="bgCanvas"></canvas>
 
 <div class="container">
-<h1 class="title">Xmoney</h1>
+<h1 class="title">XMONEY</h1>
 <p class="subtitle">The Billionaire Circle</p>
 <p class="subtitle">We Print Money Like a Factory</p>
 <p class="subtitle">Forex Is Our Game</p>
@@ -127,7 +135,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 </div>
 
 <script>
-/* BACKGROUND IDENTIK - NUK ESHTE PREKUR */
+/* BACKGROUND IDENTIK */
 const canvas = document.getElementById("bgCanvas");
 const ctx = canvas.getContext("2d");
 
