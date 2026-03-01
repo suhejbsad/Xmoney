@@ -11,47 +11,49 @@
 * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
 body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
-.container {text-align:center; padding:120px 20px; position:relative; z-index:1; perspective:1500px;}
+.container {text-align:center; padding:60px 20px; position:relative; z-index:1; perspective:1500px;}
 
 /* ========================= */
-/* XMONEY LUXURY LIGHT SWEEP */
+/* XMONEY SUPER HERO TITLE  */
 /* ========================= */
 
 .title {
   position:relative;
-  display:inline-block;
+  display:block;
+  width:100%;
+  text-align:center;
   font-family:'Montserrat', sans-serif;
   font-weight:200;
-  font-size:520px;
-  letter-spacing:14px;
+  font-size:clamp(120px, 22vw, 1000px);
+  letter-spacing:20px;
   color:#ffffff;
   text-transform:uppercase;
   overflow:hidden;
-  animation:fadeIn 2s ease forwards;
   opacity:0;
+  animation:fadeIn 2s ease forwards;
 }
 
-/* Light sweep animation */
+/* Elegant Light Sweep */
 .title::after {
   content:"";
   position:absolute;
   top:0;
-  left:-150%;
-  width:80%;
+  left:-200%;
+  width:50%;
   height:100%;
   background:linear-gradient(
     120deg,
     rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.4) 50%,
+    rgba(255,255,255,0.6) 50%,
     rgba(255,255,255,0) 100%
   );
   transform:skewX(-25deg);
-  animation:shine 4s infinite;
+  animation:shine 5s infinite ease-in-out;
 }
 
 @keyframes shine {
-  0% { left:-150%; }
-  100% { left:150%; }
+  0% { left:-200%; }
+  100% { left:200%; }
 }
 
 @keyframes fadeIn {
@@ -60,11 +62,11 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 }
 
 /* ========================= */
-/* SUBTITLES CLEAN SMALLER   */
+/* SUBTITLES                */
 /* ========================= */
 
 .subtitle {
-  margin-top:15px;
+  margin-top:10px;
   font-size:18px;
   font-weight:300;
   letter-spacing:3px;
@@ -105,11 +107,6 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   color:white;
   text-align:center;
   font-weight:bold;
-}
-
-@media(max-width:768px){
-  .title{font-size:200px;}
-  .subtitle{font-size:14px;}
 }
 </style>
 </head>
