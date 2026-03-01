@@ -11,10 +11,9 @@ body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .container {text-align:center; padding:100px 20px; position:relative; z-index:1;}
 
-/* ------------------- Xmoney SUPER BOLD ------------------- */
 .title {
   font-family:'Cinzel', serif;
-  font-size:240px; /* 3x më i madh */
+  font-size:240px;
   color:white;
   letter-spacing:5px;
   position:relative;
@@ -23,7 +22,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 }
 .subtitle {
   margin-top:20px;
-  font-size:20px; /* madhësi normale si më parë */
+  font-size:20px;
   color:white;
   opacity:0;
   transform:translateY(20px);
@@ -35,7 +34,6 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 @keyframes fadeIn {0%{opacity:0;}100%{opacity:1;}}
 @keyframes slideIn {to{opacity:1; transform:translateY(0);}}
 
-/* VIP Card nuk preket */
 .vip-card {margin:80px auto;background:rgba(0,0,0,0.3);border:2px solid #0ff;padding:40px;width:90%;max-width:400px;border-radius:18px;box-shadow:0 0 30px #0ff;backdrop-filter:blur(12px);transition:0.5s;}
 .vip-card:hover {transform:translateY(-8px);box-shadow:0 0 50px #0ff;}
 .vip-title {font-family:'Cinzel', serif;font-size:28px;margin-bottom:20px;color:#0ff;}
@@ -46,14 +44,13 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .join-btn {margin-top:20px;padding:12px 30px;background:#0ff;border:none;border-radius:8px;color:black;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;}
 .join-btn:hover {background:white;color:#0ff;}
 
-/* COUNTER POSHT PLAKATES VIP */
 #memberCounter {
   margin-top:20px;
   font-size:20px;
   color:white;
   text-align:center;
   font-weight:bold;
-  text-shadow:none; /* shndritja e ulur */
+  text-shadow:none;
 }
 @media(max-width:768px){
   .title{font-size:120px;}
@@ -78,8 +75,6 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 <p class="vip-text">2 - 55% - 60% Guaranteed Win Rate</p>
 <p class="vip-text">3 - 3 Signals Per Day (Sometimes More)</p>
 <button class="join-btn" onclick="joinVIP()">JOIN</button>
-
-<!-- MEMBER COUNTER POSHT PLAKATES -->
 <div id="memberCounter">0 Members</div>
 </div>
 </div>
@@ -96,75 +91,91 @@ resize();
 window.addEventListener("resize", resize);
 
 /* =========================
-   NEURAL NETWORK ENGINE
+   3D CRYSTAL WHALES ENGINE
    ========================= */
-const nodes = [];
-const NODE_COUNT = 120;
-const MAX_DISTANCE = 150;
 
-for(let i=0;i<NODE_COUNT;i++){
-  nodes.push({
-    x: Math.random()*canvas.width,
-    y: Math.random()*canvas.height,
-    vx: (Math.random()-0.5)*0.7,
-    vy: (Math.random()-0.5)*0.7,
-    pulse: Math.random()*Math.PI*2
-  });
+class CrystalWhale {
+  constructor(x,y,scale,dir){
+    this.x=x;
+    this.y=y;
+    this.scale=scale;
+    this.dir=dir;
+    this.angle=0;
+    this.depth=Math.random()*0.5+0.5;
+  }
+
+  draw(){
+    ctx.save();
+    ctx.translate(this.x,this.y);
+    ctx.scale(this.scale*this.depth,this.scale*this.depth);
+    ctx.rotate(Math.sin(this.angle)*0.1);
+
+    let glow = 20 + Math.sin(this.angle*2)*15;
+
+    ctx.shadowColor = "cyan";
+    ctx.shadowBlur = glow;
+
+    let gradient = ctx.createLinearGradient(-100,0,100,0);
+    gradient.addColorStop(0,"rgba(0,255,255,0.2)");
+    gradient.addColorStop(0.5,"rgba(0,255,255,0.9)");
+    gradient.addColorStop(1,"rgba(0,255,255,0.2)");
+
+    ctx.fillStyle = gradient;
+
+    ctx.beginPath();
+    ctx.moveTo(-120,0);
+    ctx.lineTo(-60,-25);
+    ctx.lineTo(40,-35);
+    ctx.lineTo(120,0);
+    ctx.lineTo(40,35);
+    ctx.lineTo(-60,25);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+
+  update(){
+    this.angle += 0.01;
+    this.x += this.dir * 0.3 * this.depth;
+    this.y += Math.sin(this.angle)*0.2;
+
+    if(this.dir>0 && this.x > canvas.width+200) this.x=-200;
+    if(this.dir<0 && this.x < -200) this.x=canvas.width+200;
+  }
 }
+
+const whales = [
+  new CrystalWhale(canvas.width/2, canvas.height*0.25, 1.2, 0.2),  // lart
+  new CrystalWhale(-200, canvas.height*0.6, 1, 1),                 // majtas
+  new CrystalWhale(canvas.width+200, canvas.height*0.75, 1.1, -1)  // djathtas
+];
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
-  gradient.addColorStop(0,"#050510");
-  gradient.addColorStop(1,"#000000");
-  ctx.fillStyle = gradient;
+  let ocean = ctx.createLinearGradient(0,0,0,canvas.height);
+  ocean.addColorStop(0,"#00111a");
+  ocean.addColorStop(1,"#000000");
+  ctx.fillStyle=ocean;
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  for(let i=0;i<nodes.length;i++){
-    let n = nodes[i];
-    n.x += n.vx;
-    n.y += n.vy;
-    if(n.x<0||n.x>canvas.width) n.vx*=-1;
-    if(n.y<0||n.y>canvas.height) n.vy*=-1;
-
-    for(let j=i+1;j<nodes.length;j++){
-      let n2 = nodes[j];
-      let dx = n.x - n2.x;
-      let dy = n.y - n2.y;
-      let dist = Math.sqrt(dx*dx+dy*dy);
-      if(dist < MAX_DISTANCE){
-        ctx.strokeStyle = "rgba(0,200,255,"+(1-dist/MAX_DISTANCE)+")";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(n.x,n.y);
-        ctx.lineTo(n2.x,n2.y);
-        ctx.stroke();
-      }
-    }
-  }
-
-  nodes.forEach(n=>{
-    n.pulse += 0.05;
-    let glow = 2 + Math.sin(n.pulse)*1.5;
-    ctx.beginPath();
-    ctx.arc(n.x,n.y,glow,0,Math.PI*2);
-    ctx.fillStyle = "rgba(0,255,255,0.9)";
-    ctx.shadowColor = "cyan";
-    ctx.shadowBlur = 15;
-    ctx.fill();
-    ctx.shadowBlur = 0;
+  whales.forEach(w=>{
+    w.update();
+    w.draw();
   });
 
   requestAnimationFrame(animate);
 }
 
 /* =========================
-   MEMBER COUNTER 0 → 1752 IN 4 SEC
+   MEMBER COUNTER
    ========================= */
+
 const counterEl = document.getElementById("memberCounter");
 const targetNumber = 1752;
-const duration = 4000; // 4 sekonda
+const duration = 4000;
 let startTime = null;
 
 function countUp(timestamp){
@@ -184,3 +195,6 @@ requestAnimationFrame(countUp);
 function joinVIP(){ alert("Welcome to the VIP zone!"); }
 animate();
 </script>
+
+</body>
+</html>
