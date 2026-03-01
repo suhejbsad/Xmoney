@@ -78,12 +78,12 @@ transform: translateX(0);
 /* VIP Card */
 .vip-card {
 margin: 80px auto;
-background: rgba(255,255,255,0.05); /* Pak e tejdukshme */
+background: rgba(255,255,255,0.05); 
 padding: 40px;
 width: 90%;
 max-width: 400px;
 border-radius: 15px;
-box-shadow: 0 0 30px rgba(0,0,0,0.8); /* Hije e theksuar */
+box-shadow: 0 0 30px rgba(0,0,0,0.8); 
 transition: 0.4s;
 backdrop-filter: blur(5px);
 }
@@ -168,45 +168,55 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let candles = [];
-let numbers = [];
+let tickNumbers = [];
 let offset = 0;
 
-// Gjenero candles
+// Generate candles
 function generateCandles(){
     candles = [];
-    numbers = [];
     let base = canvas.height / 2;
+    for(let i=0;i<120;i++){
+        let open = base + (Math.random()-0.5)*200;
+        let close = open + (Math.random()-0.5)*150;
+        let high = Math.max(open,close)+Math.random()*80;
+        let low = Math.min(open,close)-Math.random()*80;
+        candles.push({x:i*15,open,close,high,low});
+    }
+}
 
-    for(let i=0; i<100; i++){
-        let open = base + (Math.random() - 0.5) * 200;
-        let close = open + (Math.random() - 0.5) * 150;
-        let high = Math.max(open, close) + Math.random() * 80;
-        let low = Math.min(open, close) - Math.random() * 80;
-
-        candles.push({ x: i * 25, open, close, high, low });
-
-        // Numrat gold lart candle
-        let price = Math.floor(1000 + Math.random()*900);
-        numbers.push({ x: i * 25 + 5, y: base - Math.random()*150, value: price });
+// Generate animated numbers across background
+function generateNumbers(){
+    tickNumbers = [];
+    for(let i=0;i<8;i++){ // 8 numbers
+        let delay = Math.random()*2000; // fill pas kohe te ndryshme
+        let startX = Math.random()*canvas.width;
+        let startY = canvas.height + Math.random()*100;
+        tickNumbers.push({
+            x:startX,
+            y:startY,
+            value:0,
+            target:Math.floor(Math.random()*100000),
+            delay:delay,
+            startTime: null,
+            fontSize:2 + Math.random()*8
+        });
     }
 }
 
 // Draw grid
 function drawGrid(){
-    ctx.strokeStyle = "rgba(255,255,255,0.05)";
-    ctx.lineWidth = 1;
-
-    for(let i=0; i<canvas.width; i+=80){
+    ctx.strokeStyle="rgba(255,255,255,0.05)";
+    ctx.lineWidth=1;
+    for(let i=0;i<canvas.width;i+=80){
         ctx.beginPath();
-        ctx.moveTo(i - offset % 80, 0);
-        ctx.lineTo(i - offset % 80, canvas.height);
+        ctx.moveTo(i-offset%80,0);
+        ctx.lineTo(i-offset%80,canvas.height);
         ctx.stroke();
     }
-
-    for(let j=0; j<canvas.height; j+=80){
+    for(let j=0;j<canvas.height;j+=80){
         ctx.beginPath();
-        ctx.moveTo(0, j);
-        ctx.lineTo(canvas.width, j);
+        ctx.moveTo(0,j);
+        ctx.lineTo(canvas.width,j);
         ctx.stroke();
     }
 }
@@ -214,66 +224,73 @@ function drawGrid(){
 // Draw candles
 function drawCandles(){
     candles.forEach(c=>{
-        let x = c.x - offset;
-
-        // Wick
-        ctx.strokeStyle = "rgba(173,216,230,0.6)"; // blu e lehte
+        let x=c.x-offset;
+        ctx.strokeStyle="rgba(173,216,230,0.6)";
         ctx.beginPath();
-        ctx.moveTo(x + 5, c.high);
-        ctx.lineTo(x + 5, c.low);
+        ctx.moveTo(x+5,c.high);
+        ctx.lineTo(x+5,c.low);
         ctx.stroke();
-
-        // Body
-        if(c.close > c.open){
-            ctx.fillStyle = "rgba(0,191,255,0.5)"; // blu
-            ctx.fillRect(x, c.open, 10, c.close - c.open);
-        } else {
-            ctx.fillStyle = "rgba(255,255,255,0.3)"; // bardh
-            ctx.fillRect(x, c.close, 10, c.open - c.close);
+        if(c.close>c.open){
+            ctx.fillStyle="rgba(0,191,255,0.5)";
+            ctx.fillRect(x,c.open,10,c.close-c.open);
+        }else{
+            ctx.fillStyle="rgba(255,255,255,0.3)";
+            ctx.fillRect(x,c.close,10,c.open-c.close);
         }
     });
 }
 
-// Draw numbers gold
-function drawNumbers(){
-    ctx.fillStyle = "gold";
-    ctx.font = "14px Poppins";
-    numbers.forEach(n=>{
-        n.y -= 0.5; // ngrihen ngadalë
-        ctx.fillText(n.value, n.x - offset, n.y);
+// Draw animated numbers
+function drawNumbers(timestamp){
+    tickNumbers.forEach(n=>{
+        if(!n.startTime)n.startTime=timestamp+n.delay;
+        let progress=Math.min((timestamp-n.startTime)/1000,1); // 1 sek
+        if(progress>0){
+            n.value=Math.floor(progress*n.target);
+            ctx.fillStyle="gold";
+            ctx.font=`${n.fontSize+progress*20}px Poppins`;
+            ctx.fillText(`$${n.value}`,n.x,n.y - progress*100);
+        }
     });
 }
 
-// Animate background
-function animate(){
+// Animate candles: every 1 sec shift 3 candles
+let lastShift = 0;
+function animate(timestamp){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     drawGrid();
     drawCandles();
-    drawNumbers();
+    drawNumbers(timestamp);
 
-    offset += 1;
-    if(offset > candles.length * 25){
+    // Shift candles every 1 sec
+    if(!lastShift)lastShift=timestamp;
+    if(timestamp-lastShift>1000){
+        offset+=45; // 3 candles * 15px
+        lastShift=timestamp;
+    }
+
+    if(offset>candles.length*15){
         generateCandles();
-        offset = 0;
+        offset=0;
     }
 
     requestAnimationFrame(animate);
 }
 
 generateCandles();
-animate();
+generateNumbers();
+requestAnimationFrame(animate);
 
-// Responsive
-window.addEventListener("resize", ()=>{
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+window.addEventListener("resize",()=>{
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
     generateCandles();
+    generateNumbers();
 });
 
-// Placeholder për button JOIN
-function joinVIP(){
-    alert("Welcome to the VIP zone!");
-}
+// Placeholder JOIN
+function joinVIP(){ alert("Welcome to the VIP zone!"); }
+
 </script>
 
 </body>
