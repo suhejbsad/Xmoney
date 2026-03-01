@@ -16,7 +16,6 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 /* ========================= */
 /* XMONEY SUPER HERO TITLE  */
 /* ========================= */
-
 .title {
   position:relative;
   display:block;
@@ -33,38 +32,9 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   animation:fadeIn 2s ease forwards;
 }
 
-/* Elegant Light Sweep */
-.title::after {
-  content:"";
-  position:absolute;
-  top:0;
-  left:-200%;
-  width:50%;
-  height:100%;
-  background:linear-gradient(
-    120deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.6) 50%,
-    rgba(255,255,255,0) 100%
-  );
-  transform:skewX(-25deg);
-  animation:shine 5s infinite ease-in-out;
-}
-
-@keyframes shine {
-  0% { left:-200%; }
-  100% { left:200%; }
-}
-
-@keyframes fadeIn {
-  from {opacity:0; transform:translateY(40px);}
-  to {opacity:1; transform:translateY(0);}
-}
-
 /* ========================= */
 /* SUBTITLES                */
 /* ========================= */
-
 .subtitle {
   margin-top:10px;
   font-size:18px;
@@ -84,18 +54,53 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   to {opacity:1; transform:translateY(0);}
 }
 
-/* ========================= */
-/* VIP CARD (UNCHANGED)     */
-/* ========================= */
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(40px);}
+  to {opacity:1; transform:translateY(0);}
+}
 
-.vip-card {margin:80px auto;background:rgba(0,0,0,0.3);border:2px solid #0ff;padding:40px;width:90%;max-width:400px;border-radius:18px;box-shadow:0 0 30px #0ff;backdrop-filter:blur(12px);transition:0.5s;}
-.vip-card:hover {transform:translateY(-8px);box-shadow:0 0 50px #0ff;}
+/* ========================= */
+/* VIP CARD                 */
+/* ========================= */
+.vip-card {
+  margin:80px auto;
+  background:rgba(0,0,0,0.3);
+  border:2px solid #0ff;
+  padding:40px;
+  width:90%;
+  max-width:400px;
+  border-radius:18px;
+  box-shadow:0 0 30px #0ff;
+  backdrop-filter:blur(12px);
+  transition:0.5s;
+}
+.vip-card:hover {
+  transform:translateY(-8px);
+  box-shadow:0 0 50px #0ff;
+}
 .vip-title {font-size:28px;margin-bottom:20px;color:#0ff;}
-.vip-text {margin:10px 0;color:#0ff;opacity:0;transform:translateY(20px);animation:slideIn 1.5s forwards;}
+.vip-text {
+  margin:10px 0;
+  color:#0ff;
+  opacity:0;
+  transform:translateY(20px);
+  animation:slideIn 1.5s forwards;
+}
 .vip-text:nth-child(2){animation-delay:1.2s;}
 .vip-text:nth-child(3){animation-delay:1.5s;}
 .vip-text:nth-child(4){animation-delay:1.8s;}
-.join-btn {margin-top:20px;padding:12px 30px;background:#0ff;border:none;border-radius:8px;color:black;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;}
+.join-btn {
+  margin-top:20px;
+  padding:12px 30px;
+  background:#0ff;
+  border:none;
+  border-radius:8px;
+  color:black;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
 .join-btn:hover {background:white;color:#0ff;}
 
 @keyframes slideIn {to{opacity:1; transform:translateY(0);}}
@@ -132,7 +137,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 </div>
 
 <script>
-/* BACKGROUND IDENTIK */
+/* BACKGROUND PARTICLES */
 const canvas = document.getElementById("bgCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -203,6 +208,7 @@ function animate(){
   requestAnimationFrame(animate);
 }
 
+/* MEMBER COUNTER */
 const counterEl = document.getElementById("memberCounter");
 const targetNumber = 1752;
 const duration = 4000;
