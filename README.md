@@ -11,27 +11,35 @@ body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .container {text-align:center; padding:100px 20px; position:relative; z-index:1;}
 
-/* ------------------- Xmoney SUPER BOLD ------------------- */
+/* ------------------- Xmoney GLASS 3D ------------------- */
 .title {
   font-family:'Cinzel', serif;
-  font-size:240px; /* 3x më i madh */
-  color:white;
+  font-size:240px;
   letter-spacing:5px;
-  position:relative;
+  color:rgba(255,255,255,0.95);
   opacity:0;
   animation:fadeIn 2s forwards;
+
+  text-shadow:
+    0 0 5px rgba(255,255,255,0.9),
+    0 0 20px rgba(255,255,255,0.6),
+    0 0 40px rgba(255,255,255,0.4),
+    5px 5px 15px rgba(0,0,0,0.7);
 }
+
 .subtitle {
   margin-top:20px;
-  font-size:20px; /* madhësi normale si më parë */
+  font-size:20px;
   color:white;
   opacity:0;
   transform:translateY(20px);
   animation:slideIn 1.5s forwards;
 }
+
 .subtitle:nth-child(2){animation-delay:0.5s;}
 .subtitle:nth-child(3){animation-delay:0.8s;}
 .subtitle:nth-child(4){animation-delay:1.1s;}
+
 @keyframes fadeIn {0%{opacity:0;}100%{opacity:1;}}
 @keyframes slideIn {to{opacity:1; transform:translateY(0);}}
 
@@ -53,8 +61,9 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   color:white;
   text-align:center;
   font-weight:bold;
-  text-shadow:none; /* shndritja e ulur */
+  text-shadow:none;
 }
+
 @media(max-width:768px){
   .title{font-size:120px;}
   .subtitle{font-size:16px;}
@@ -79,7 +88,6 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 <p class="vip-text">3 - 3 Signals Per Day (Sometimes More)</p>
 <button class="join-btn" onclick="joinVIP()">JOIN</button>
 
-<!-- MEMBER COUNTER POSHT PLAKATES -->
 <div id="memberCounter">0 Members</div>
 </div>
 </div>
@@ -95,9 +103,6 @@ function resize(){
 resize();
 window.addEventListener("resize", resize);
 
-/* =========================
-   NEURAL NETWORK ENGINE
-   ========================= */
 const nodes = [];
 const NODE_COUNT = 120;
 const MAX_DISTANCE = 150;
@@ -159,12 +164,9 @@ function animate(){
   requestAnimationFrame(animate);
 }
 
-/* =========================
-   MEMBER COUNTER 0 → 1752 IN 4 SEC
-   ========================= */
 const counterEl = document.getElementById("memberCounter");
 const targetNumber = 1752;
-const duration = 4000; // 4 sekonda
+const duration = 4000;
 let startTime = null;
 
 function countUp(timestamp){
