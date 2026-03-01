@@ -11,7 +11,7 @@
 * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
 body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
-.container {text-align:center; padding:60px 20px; position:relative; z-index:1; perspective:1500px;}
+.container {text-align:center; padding:40px 20px; position:relative; z-index:1; perspective:1500px;}
 
 /* ========================= */
 /* XMONEY SUPER HERO TITLE  */
@@ -30,6 +30,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   overflow:hidden;
   opacity:0;
   animation:fadeIn 2s ease forwards;
+  margin-bottom:20px; /* shton hapësirë nga tekstet poshtë */
 }
 
 /* ========================= */
