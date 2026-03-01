@@ -4,82 +4,83 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Xmoney</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&family=Cinzel:wght@600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Montserrat:wght@200;300&display=swap" rel="stylesheet">
 
 <style>
 * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
 body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
-.container {text-align:center; padding:120px 20px; position:relative; z-index:1; perspective:1200px;}
+.container {text-align:center; padding:120px 20px; position:relative; z-index:1; perspective:1500px;}
 
-/* ===================== */
-/* LUXURY Xmoney TITLE  */
-/* ===================== */
+/* ========================= */
+/* ULTRA LUXURY Xmoney      */
+/* ========================= */
 
 .title {
-  font-family:'Playfair Display', serif;
-  font-size:380px; /* shumë më i madh */
-  font-weight:700;
-  letter-spacing:10px;
+  font-family:'Montserrat', sans-serif;
+  font-weight:200;
+  font-size:520px; /* 5x massive */
+  letter-spacing:12px;
   color:#ffffff;
-  opacity:0;
-  transform-style:preserve-3d;
 
+  transform-style:preserve-3d;
   animation:
-    fadeIn 2s forwards,
-    luxuryFloat 6s ease-in-out infinite;
+    titleAppear 2s ease forwards,
+    cinematicFloat 8s ease-in-out infinite;
 
   text-shadow:
-    0 2px 4px rgba(0,0,0,0.4),
-    0 8px 20px rgba(0,0,0,0.5);
+    0 5px 15px rgba(0,0,0,0.5),
+    0 15px 40px rgba(0,0,0,0.6);
+  opacity:0;
 }
 
-/* Floating Luxury Motion */
-@keyframes luxuryFloat {
-  0%   { transform: rotateX(0deg) rotateY(0deg) translateY(0px); }
-  25%  { transform: rotateX(6deg) rotateY(-6deg) translateY(-10px); }
-  50%  { transform: rotateX(0deg) rotateY(0deg) translateY(0px); }
-  75%  { transform: rotateX(-6deg) rotateY(6deg) translateY(-10px); }
-  100% { transform: rotateX(0deg) rotateY(0deg) translateY(0px); }
+@keyframes titleAppear {
+  from {opacity:0; transform:translateY(60px) scale(0.9);}
+  to {opacity:1; transform:translateY(0) scale(1);}
 }
 
-@keyframes fadeIn {0%{opacity:0;}100%{opacity:1;}}
+/* Smooth cinematic 3D motion */
+@keyframes cinematicFloat {
+  0%   {transform:rotateX(0deg) rotateY(0deg);}
+  25%  {transform:rotateX(5deg) rotateY(-8deg);}
+  50%  {transform:rotateX(0deg) rotateY(0deg);}
+  75%  {transform:rotateX(-5deg) rotateY(8deg);}
+  100% {transform:rotateX(0deg) rotateY(0deg);}
+}
 
-/* ===================== */
-/* 3D SUBTITLES          */
-/* ===================== */
+/* ========================= */
+/* SUBTITLES SMALLER & CLEAN */
+/* ========================= */
 
 .subtitle {
-  margin-top:25px;
-  font-size:24px;
-  font-weight:600;
-  letter-spacing:2px;
-  background:linear-gradient(45deg,#ffffff,#cceeff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  margin-top:15px;
+  font-size:18px; /* më të vogla */
+  font-weight:300;
+  letter-spacing:3px;
+  color:#e6faff;
 
-  transform-style:preserve-3d;
   opacity:0;
-  transform:rotateX(90deg);
-  animation:subtitle3D 1.5s forwards;
+  animation:subtitleWave 2s ease forwards;
 }
 
-.subtitle:nth-child(2){animation-delay:0.5s;}
-.subtitle:nth-child(3){animation-delay:0.9s;}
-.subtitle:nth-child(4){animation-delay:1.3s;}
+.subtitle:nth-child(2){animation-delay:0.8s;}
+.subtitle:nth-child(3){animation-delay:1.2s;}
+.subtitle:nth-child(4){animation-delay:1.6s;}
 
-@keyframes subtitle3D {
-  0%   {opacity:0; transform:rotateX(90deg);}
-  100% {opacity:1; transform:rotateX(0deg);}
+@keyframes subtitleWave {
+  0% {opacity:0; transform:translateY(30px);}
+  50% {transform:translateY(-8px);}
+  100% {opacity:1; transform:translateY(0);}
 }
 
-/* ===================== */
-/* VIP CARD (unchanged)  */
-/* ===================== */
+/* ========================= */
+/* VIP CARD (unchanged)     */
+/* ========================= */
 
 .vip-card {margin:80px auto;background:rgba(0,0,0,0.3);border:2px solid #0ff;padding:40px;width:90%;max-width:400px;border-radius:18px;box-shadow:0 0 30px #0ff;backdrop-filter:blur(12px);transition:0.5s;}
 .vip-card:hover {transform:translateY(-8px);box-shadow:0 0 50px #0ff;}
-.vip-title {font-family:'Cinzel', serif;font-size:28px;margin-bottom:20px;color:#0ff;}
+.vip-title {font-size:28px;margin-bottom:20px;color:#0ff;}
 .vip-text {margin:10px 0;color:#0ff;opacity:0;transform:translateY(20px);animation:slideIn 1.5s forwards;}
 .vip-text:nth-child(2){animation-delay:1.2s;}
 .vip-text:nth-child(3){animation-delay:1.5s;}
@@ -99,9 +100,8 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 }
 
 @media(max-width:768px){
-  .title{font-size:160px;}
-  .subtitle{font-size:18px;}
-  #memberCounter{font-size:16px;}
+  .title{font-size:200px;}
+  .subtitle{font-size:14px;}
 }
 </style>
 </head>
@@ -127,7 +127,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 </div>
 
 <script>
-/* BACKGROUND ENGINE IDENTIK - I PAPREKUR */
+/* BACKGROUND IDENTIK - NUK ESHTE PREKUR */
 const canvas = document.getElementById("bgCanvas");
 const ctx = canvas.getContext("2d");
 
