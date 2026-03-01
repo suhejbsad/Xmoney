@@ -7,11 +7,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&family=Cinzel:wght@600&display=swap" rel="stylesheet">
 <style>
 * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
-body {background:#000; color:white; overflow-x:hidden;}
-canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
+body {overflow-x:hidden; margin:0; color:white;}
+/* Video background */
+#bgVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+  object-fit: cover;
+  filter: brightness(0.6); /* pak errësim për të lexuar tekstin */
+}
+
+/* Main Container */
 .container {text-align:center; padding:100px 20px;}
 .title {font-size:80px; font-weight:800; position:relative; opacity:0; animation:appearStars 2s forwards; letter-spacing:5px;}
-@keyframes appearStars {0%{opacity:0;text-shadow:0 0 0px #fff;}50%{opacity:1;text-shadow:0 0 20px #fff,0 0 40px #fff;}100%{opacity:1;text-shadow:0 0 10px #fff,0 0 20px #fff,0 0 30px #fff;}}
+@keyframes appearStars {0%{opacity:0;}50%{opacity:1;}100%{opacity:1;}}
 .subtitle {margin-top:20px;font-size:20px;opacity:0;transform:translateX(-100%);animation:slideIn 1.5s forwards;}
 .subtitle:nth-child(2){animation-delay:0.5s;}
 .subtitle:nth-child(3){animation-delay:0.8s;}
@@ -31,7 +45,11 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 </head>
 <body>
 
-<canvas id="bgCanvas"></canvas>
+<!-- Video Background -->
+<video autoplay muted loop id="bgVideo">
+  <!-- Vendos URL e video-s të lirë me luks këtu -->
+  <source src="https://www.videvo.net/videvo_files/converted/2015_06/videos/Luxury_Cars_04_Videvo.mov" type="video/mp4">
+</video>
 
 <div class="container">
 <h1 class="title">Xmoney</h1>
@@ -48,45 +66,6 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 </div>
 
 <script>
-const canvas=document.getElementById("bgCanvas");
-const ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-// Galaxy stars
-let stars=[];
-for(let i=0;i<200;i++){
-    stars.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        size:Math.random()*1.5+0.5,
-        speed:Math.random()*0.2+0.05
-    });
-}
-
-function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    
-    // Draw stars
-    stars.forEach(s=>{
-        s.y-=s.speed; // stars move upward slowly
-        if(s.y<0){s.y=canvas.height; s.x=Math.random()*canvas.width; s.size=Math.random()*1.5+0.5; s.speed=Math.random()*0.2+0.05;}
-        ctx.fillStyle="white";
-        ctx.beginPath();
-        ctx.arc(s.x,s.y,s.size,0,Math.PI*2);
-        ctx.fill();
-    });
-    
-    requestAnimationFrame(animate);
-}
-animate();
-
-window.addEventListener("resize",()=>{
-    canvas.width=window.innerWidth;
-    canvas.height=window.innerHeight;
-    stars.forEach(s=>{s.x=Math.random()*canvas.width; s.y=Math.random()*canvas.height;});
-});
-
 function joinVIP(){alert("Welcome to the VIP zone!");}
 </script>
 
