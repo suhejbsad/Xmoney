@@ -60,81 +60,59 @@ resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 /* ===========================
-   LOW POLY GEOMETRY ENGINE
+   ANIMATED FRACTAL ENGINE
    =========================== */
 
-const spacing = 80;
-let points = [];
 let time = 0;
 
-function createGrid(){
-    points = [];
-    for(let x = 0; x <= canvas.width + spacing; x += spacing){
-        for(let y = 0; y <= canvas.height + spacing; y += spacing){
-            points.push({
-                x:x,
-                y:y,
-                baseX:x,
-                baseY:y
-            });
-        }
+function drawFractal(cx, cy, radius, depth, angleOffset) {
+    if (depth === 0) return;
+
+    const branches = 6;
+    for (let i = 0; i < branches; i++) {
+        const angle = (Math.PI * 2 / branches) * i + angleOffset;
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * radius;
+
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+
+        drawFractal(x, y, radius * 0.5, depth - 1, angleOffset + 0.1);
     }
 }
-createGrid();
 
-window.addEventListener("resize", createGrid);
-
-function drawLowPoly(){
+function animate() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    // Dark gradient base
-    let gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+    // Dark animated gradient
+    let gradient = ctx.createRadialGradient(
+        canvas.width/2,
+        canvas.height/2,
+        0,
+        canvas.width/2,
+        canvas.height/2,
+        canvas.width
+    );
     gradient.addColorStop(0,"#0f2027");
-    gradient.addColorStop(1,"#203a43");
+    gradient.addColorStop(1,"#000000");
     ctx.fillStyle = gradient;
     ctx.fillRect(0,0,canvas.width,canvas.height);
-
-    time += 0.01;
-
-    // Animate points
-    points.forEach(p=>{
-        p.y = p.baseY + Math.sin(p.baseX * 0.01 + time) * 25;
-    });
 
     ctx.strokeStyle = "rgba(0,255,200,0.25)";
     ctx.lineWidth = 1;
 
-    for(let x = 0; x < canvas.width/spacing; x++){
-        for(let y = 0; y < canvas.height/spacing; y++){
+    time += 0.01;
 
-            let i = x * Math.floor(canvas.height/spacing + 1) + y;
+    drawFractal(
+        canvas.width/2,
+        canvas.height/2,
+        120 + Math.sin(time)*30,
+        4,
+        time
+    );
 
-            let p1 = points[i];
-            let p2 = points[i + 1];
-            let p3 = points[i + Math.floor(canvas.height/spacing + 1)];
-            let p4 = points[i + Math.floor(canvas.height/spacing + 1) + 1];
-
-            if(p1 && p2 && p3){
-                drawTriangle(p1,p2,p3);
-            }
-            if(p2 && p3 && p4){
-                drawTriangle(p2,p3,p4);
-            }
-        }
-    }
-}
-
-function drawTriangle(a,b,c){
-    ctx.beginPath();
-    ctx.moveTo(a.x,a.y);
-    ctx.lineTo(b.x,b.y);
-    ctx.lineTo(c.x,c.y);
-    ctx.closePath();
-    ctx.stroke();
-}
-
-function animate(){
-    drawLowPoly();
     requestAnimationFrame(animate);
 }
 
