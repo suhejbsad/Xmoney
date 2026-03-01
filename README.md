@@ -50,73 +50,88 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 
 <script>
 const canvas = document.getElementById("bgCanvas");
-const ctx = canvas.getContext("2d");
+const gl = canvas.getContext("webgl");
 
-function resizeCanvas(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);
 }
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+resize();
+window.addEventListener("resize", resize);
 
-/* ===========================
-   ANIMATED FRACTAL ENGINE
-   =========================== */
-
-let time = 0;
-
-function drawFractal(cx, cy, radius, depth, angleOffset) {
-    if (depth === 0) return;
-
-    const branches = 6;
-    for (let i = 0; i < branches; i++) {
-        const angle = (Math.PI * 2 / branches) * i + angleOffset;
-        const x = cx + Math.cos(angle) * radius;
-        const y = cy + Math.sin(angle) * radius;
-
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-
-        drawFractal(x, y, radius * 0.5, depth - 1, angleOffset + 0.1);
-    }
+const vertexShaderSource = `
+attribute vec2 position;
+void main() {
+  gl_Position = vec4(position, 0.0, 1.0);
 }
+`;
 
-function animate() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+const fragmentShaderSource = `
+precision highp float;
+uniform vec2 u_resolution;
+uniform float u_time;
 
-    // Dark animated gradient
-    let gradient = ctx.createRadialGradient(
-        canvas.width/2,
-        canvas.height/2,
-        0,
-        canvas.width/2,
-        canvas.height/2,
-        canvas.width
-    );
-    gradient.addColorStop(0,"#0f2027");
-    gradient.addColorStop(1,"#000000");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0,0,canvas.width,canvas.height);
+void main(){
+  vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+  uv -= 0.5;
+  uv.x *= u_resolution.x / u_resolution.y;
 
-    ctx.strokeStyle = "rgba(0,255,200,0.25)";
-    ctx.lineWidth = 1;
+  float r = length(uv);
+  float angle = atan(uv.y, uv.x);
 
-    time += 0.01;
+  float wave = sin(r*10.0 - u_time*2.0);
+  float glow = 0.02 / abs(wave);
 
-    drawFractal(
-        canvas.width/2,
-        canvas.height/2,
-        120 + Math.sin(time)*30,
-        4,
-        time
-    );
+  vec3 color = vec3(0.0);
+  color += vec3(0.0,0.5,0.8) * glow;
+  color += vec3(0.0,0.2,0.4) * (1.0-r);
 
-    requestAnimationFrame(animate);
+  gl_FragColor = vec4(color,1.0);
+}
+`;
+
+function createShader(type, source){
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  return shader;
 }
 
-animate();
+const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
+const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+const program = gl.createProgram();
+gl.attachShader(program, vertexShader);
+gl.attachShader(program, fragmentShader);
+gl.linkProgram(program);
+gl.useProgram(program);
+
+const positionBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+  -1,-1,
+   1,-1,
+  -1, 1,
+  -1, 1,
+   1,-1,
+   1, 1
+]), gl.STATIC_DRAW);
+
+const positionLocation = gl.getAttribLocation(program, "position");
+gl.enableVertexAttribArray(positionLocation);
+gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+const resolutionLocation = gl.getUniformLocation(program,"u_resolution");
+const timeLocation = gl.getUniformLocation(program,"u_time");
+
+function render(time){
+  gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+  gl.uniform1f(timeLocation, time*0.001);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
 
 function joinVIP(){ alert("Welcome to the VIP zone!"); }
 </script>
