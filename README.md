@@ -16,6 +16,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   font-family:'Cinzel', serif;
   font-size:200px;
   color:#0ff;
+  text-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 60px #0ff;
   position:relative;
   opacity:0;
   animation:glowIn 2s forwards;
