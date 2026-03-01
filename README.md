@@ -14,7 +14,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .container {text-align:center; padding:40px 20px; position:relative; z-index:1; perspective:1500px;}
 
 /* ========================= */
-/* XMONEY SUPER HERO TITLE  */
+/* XMONEY TITLE ANIMATED    */
 /* ========================= */
 .title {
   position:relative;
@@ -28,8 +28,13 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   color:#ffffff;
   text-transform:uppercase;
   overflow:hidden;
-  opacity:1; /* pa efekt fade-in në këtë version */
-  margin-bottom:20px; /* hapësirë poshtë titullit për subtitujt */
+  opacity:0;
+  animation:fadeIn 2s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(40px);}
+  to {opacity:1; transform:translateY(0);}
 }
 
 /* ========================= */
@@ -41,12 +46,18 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   font-weight:300;
   letter-spacing:3px;
   color:#e6faff;
-  opacity:1; /* pa efekt fade-in */
+  opacity:0;
+  animation:subtitleFade 2s ease forwards;
 }
 
-.subtitle:nth-child(2){}
-.subtitle:nth-child(3){}
-.subtitle:nth-child(4){}
+.subtitle:nth-child(2){animation-delay:0.8s;}
+.subtitle:nth-child(3){animation-delay:1.2s;}
+.subtitle:nth-child(4){animation-delay:1.6s;}
+
+@keyframes subtitleFade {
+  from {opacity:0; transform:translateY(20px);}
+  to {opacity:1; transform:translateY(0);}
+}
 
 /* ========================= */
 /* VIP CARD                 */
@@ -62,18 +73,33 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   box-shadow:0 0 30px #0ff;
   backdrop-filter:blur(12px);
   transition:0.5s;
+  text-align:left; /* për ti dhënë hapësirë tekstit në të djathtë */
+  transform: translateX(20px); /* zhvendos pak në të djathtë */
 }
 .vip-card:hover {
-  transform:translateY(-8px);
+  transform:translateY(-8px) translateX(20px);
   box-shadow:0 0 50px #0ff;
 }
-.vip-title {font-size:28px;margin-bottom:20px;color:#0ff;}
+.vip-title {
+  font-size:28px;
+  margin-bottom:20px;
+  color:#ffffff; /* teksti bardhë */
+}
 .vip-text {
   margin:10px 0;
-  color:#0ff;
-  opacity:1;
-  transform:translateY(0);
+  color:#ffffff; /* teksti bardhë */
+  opacity:0;
+  transform:translateY(20px);
+  animation:slideIn 1.5s forwards;
 }
+.vip-text:nth-child(2){animation-delay:1.2s;}
+.vip-text:nth-child(3){animation-delay:1.5s;}
+.vip-text:nth-child(4){animation-delay:1.8s;}
+
+@keyframes slideIn {
+  to {opacity:1; transform:translateY(0);}
+}
+
 .join-btn {
   margin-top:20px;
   padding:12px 30px;
@@ -104,19 +130,19 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 <canvas id="bgCanvas"></canvas>
 
 <div class="container">
-<h1 class="title">XMONEY</h1> <!-- Titulli është lart, pa vijë nën të -->
-<p class="subtitle">The Billionaire Circle</p>
-<p class="subtitle">We Print Money Like a Factory</p>
-<p class="subtitle">Forex Is Our Game</p>
+  <h1 class="title">XMONEY</h1>
+  <p class="subtitle">The Billionaire Circle</p>
+  <p class="subtitle">We Print Money Like a Factory</p>
+  <p class="subtitle">Forex Is Our Game</p>
 
-<div class="vip-card">
-<h2 class="vip-title">VIP ZONE</h2>
-<p class="vip-text">1 - Daily Forex Signals</p>
-<p class="vip-text">2 - 55% - 60% Guaranteed Win Rate</p>
-<p class="vip-text">3 - 3 Signals Per Day (Sometimes More)</p>
-<button class="join-btn" onclick="joinVIP()">JOIN</button>
-<div id="memberCounter">0 Members</div>
-</div>
+  <div class="vip-card">
+    <h2 class="vip-title">VIP ZONE</h2>
+    <p class="vip-text">1 - Daily Forex Signals</p>
+    <p class="vip-text">2 - 55% - 60% Guaranteed Win Rate</p>
+    <p class="vip-text">3 - 3 Signals Per Day (Sometimes More)</p>
+    <button class="join-btn" onclick="joinVIP()">JOIN</button>
+    <div id="memberCounter">0 Members</div>
+  </div>
 </div>
 
 <script>
