@@ -107,25 +107,22 @@
             letter-spacing: 6px;
             color: var(--cyan);
             text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+            text-align: center;
         }
 
-        .features-list { list-style: none; text-align: left; margin-bottom: 30px; }
+        .features-list { list-style: none; text-align: center; margin-bottom: 30px; }
         .features-list li {
             padding: 15px 0;
             border-bottom: 1px solid var(--border);
-            font-size: 13px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            font-size: 14px;
+            display: block;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            color: white;
+            font-weight: 300;
         }
 
-        .features-list li span:last-child {
-            color: var(--cyan);
-            font-weight: 700;
-            text-align: right;
-        }
+        .features-list li:last-child { border-bottom: none; }
 
         .join-btn {
             width: 100%;
@@ -152,6 +149,7 @@
             font-size: 16px;
             color: rgba(255,255,255,0.4);
             letter-spacing: 2px;
+            text-align: center;
         }
 
         /* --- ANIMATIONS --- */
@@ -170,7 +168,7 @@
         @media(max-width: 768px) {
             .title { font-size: 70px; letter-spacing: -2px; }
             .vip-card { padding: 30px; }
-            .features-list li { font-size: 11px; }
+            .features-list li { font-size: 12px; }
         }
     </style>
 </head>
@@ -191,9 +189,9 @@
     <div class="vip-card">
         <h2 class="vip-title">VIP ZONE</h2>
         <ul class="features-list">
-            <li><span>Tier Alpha Signals</span> <span>Daily Forex Signals</span></li>
-            <li><span>Strike Precision</span> <span>57% - 60% Guaranteed Win Rate</span></li>
-            <li><span>Market Frequency</span> <span>3 Signals Per Day (Sometimes More)</span></li>
+            <li>Daily Forex Signals</li>
+            <li>57% - 60% Guaranteed Win Rate</li>
+            <li>3 Signals Per Day (Sometimes More)</li>
         </ul>
         <button class="join-btn" onclick="joinVIP()">Claim Access</button>
         <div id="memberCounter">0 Elite Members</div>
