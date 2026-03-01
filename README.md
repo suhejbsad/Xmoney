@@ -15,7 +15,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .title {
   font-family:'Cinzel', serif;
   font-size:200px;
-  color:#0ff;
+  color:#0ff; /* Titulli mbetet blu */
   text-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 60px #0ff;
   position:relative;
   opacity:0;
@@ -31,7 +31,8 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .subtitle { 
   margin-top:20px; 
   font-size:20px; 
-  color:#0ff; 
+  color:#fff; /* Bardhë */
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff; /* Neon i lehtë */
   opacity:0; 
   transform:translateY(20px);
   animation:slideIn 1.5s forwards;
@@ -55,14 +56,43 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   transition:0.5s;
 }
 .vip-card:hover {transform:translateY(-10px); box-shadow:0 0 60px #0ff;}
-.vip-title {font-family:'Cinzel', serif; font-size:30px; margin-bottom:20px; color:#0ff;}
-.vip-text {margin:10px 0; color:#0ff; opacity:0; transform:translateY(20px); animation:slideIn 1.5s forwards;}
+.vip-title {
+  font-family:'Cinzel', serif; 
+  font-size:30px; 
+  margin-bottom:20px; 
+  color:#fff; /* Bardhë */
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff;
+}
+.vip-text {
+  margin:10px 0; 
+  color:#fff; /* Bardhë */
+  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
+  opacity:0; 
+  transform:translateY(20px); 
+  animation:slideIn 1.5s forwards;
+}
 .vip-text:nth-child(2){animation-delay:1.2s;}
 .vip-text:nth-child(3){animation-delay:1.5s;}
 .vip-text:nth-child(4){animation-delay:1.8s;}
 .vip-text:nth-child(5){animation-delay:2.1s;}
-.join-btn {margin-top:20px; padding:14px 32px; background:#0ff; border:none; border-radius:10px; color:black; font-size:16px; font-weight:bold; cursor:pointer; transition:0.3s;}
-.join-btn:hover {background:white; color:#0ff;}
+.join-btn {
+  margin-top:20px; 
+  padding:14px 32px; 
+  background:#fff; /* Bardhë */
+  border:none; 
+  border-radius:10px; 
+  color:black; 
+  font-size:16px; 
+  font-weight:bold; 
+  cursor:pointer; 
+  transition:0.3s;
+  text-shadow: 0 0 2px #fff, 0 0 4px #fff;
+}
+.join-btn:hover { 
+  background:#eee; 
+  color:black; 
+  box-shadow: 0 0 10px #fff; 
+}
 
 /* ==================== MEMBER COUNTER & MENTOR STATS ==================== */
 #statsWrapper {
@@ -75,17 +105,23 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   width:90%;
   max-width:900px;
 }
-
 #memberCounter, #mentorStats {
   font-size:22px;
   font-weight:bold;
-  color:white;
+  color:#fff; /* Bardhë */
+  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
   opacity:0;
   animation:slideUp 1.5s forwards;
 }
-#memberCounter {color:#fff; text-align:right; flex:1;}
-#mentorStats {color:#fff; text-align:left; flex:1;}
-#mentorStats span {display:block; font-size:18px; margin:5px 0; color:#0ff;}
+#memberCounter {text-align:right; flex:1;}
+#mentorStats {text-align:left; flex:1;}
+#mentorStats span {
+  display:block; 
+  font-size:18px; 
+  margin:5px 0; 
+  color:#fff; 
+  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
+}
 @keyframes slideUp {to{opacity:1; transform:translateY(0);}}
 
 /* ==================== MEDIA ==================== */
