@@ -9,14 +9,14 @@
 * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
 body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
-.container {text-align:center; padding:100px 20px;}
+.container {text-align:center; padding:100px 20px; position:relative; z-index:1;}
 
-/* ------------------- FUTURISTIC NEON GLOW ------------------- */
+/* ------------------- FUTURISTIC NEON GLOW UPDATED ------------------- */
 .title {
   font-family:'Cinzel', serif;
-  font-size:80px;
-  color:#0ff;
-  text-shadow:0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
+  font-size:240px; /* 3x më i madh */
+  color:white;
+  text-shadow:0 0 15px #fff,0 0 30px #fff,0 0 45px #fff;
   position:relative;
   opacity:0;
   animation:fadeIn 2s forwards;
@@ -24,9 +24,9 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 }
 .subtitle {
   margin-top:20px;
-  font-size:20px;
-  color:#0ff;
-  text-shadow:0 0 5px #0ff;
+  font-size:40px; /* më i dukshëm */
+  color:white;
+  text-shadow:0 0 5px #fff;
   opacity:0;
   transform:translateY(20px);
   animation:slideIn 1.5s forwards;
@@ -37,59 +37,33 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 @keyframes fadeIn {0%{opacity:0;}100%{opacity:1;}}
 @keyframes slideIn {to{opacity:1; transform:translateY(0);}}
 
-.vip-card {
-  margin:80px auto;
-  background:rgba(0,0,0,0.3);
-  border:2px solid #0ff;
-  padding:40px;
-  width:90%;
-  max-width:400px;
-  border-radius:18px;
-  box-shadow:0 0 30px #0ff;
-  backdrop-filter:blur(12px);
-  transition:0.5s;
-}
-.vip-card:hover {
-  transform:translateY(-8px);
-  box-shadow:0 0 50px #0ff;
-}
-.vip-title {
-  font-family:'Cinzel', serif;
-  font-size:28px;
-  margin-bottom:20px;
-  color:#0ff;
-}
-.vip-text {
-  margin:10px 0;
-  color:#0ff;
-  opacity:0;
-  transform:translateY(20px);
-  animation:slideIn 1.5s forwards;
-}
+/* VIP Card nuk preket */
+.vip-card {margin:80px auto;background:rgba(0,0,0,0.3);border:2px solid #0ff;padding:40px;width:90%;max-width:400px;border-radius:18px;box-shadow:0 0 30px #0ff;backdrop-filter:blur(12px);transition:0.5s;}
+.vip-card:hover {transform:translateY(-8px);box-shadow:0 0 50px #0ff;}
+.vip-title {font-family:'Cinzel', serif;font-size:28px;margin-bottom:20px;color:#0ff;}
+.vip-text {margin:10px 0;color:#0ff;opacity:0;transform:translateY(20px);animation:slideIn 1.5s forwards;}
 .vip-text:nth-child(2){animation-delay:1.2s;}
 .vip-text:nth-child(3){animation-delay:1.5s;}
 .vip-text:nth-child(4){animation-delay:1.8s;}
+.join-btn {margin-top:20px;padding:12px 30px;background:#0ff;border:none;border-radius:8px;color:black;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;}
+.join-btn:hover {background:white;color:#0ff;}
 
-.join-btn {
-  margin-top:20px;
-  padding:12px 30px;
-  background:#0ff;
-  border:none;
-  border-radius:8px;
-  color:black;
-  font-size:16px;
+/* NUMRI NË POSHT BACKGROUND */
+#memberCounter {
+  position:absolute;
+  bottom:40px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:32px;
+  color:white;
   font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
+  text-shadow:0 0 5px #fff;
+  z-index:1;
 }
-.join-btn:hover {
-  background:white;
-  color:#0ff;
-}
-
 @media(max-width:768px){
-  .title{font-size:50px;}
-  .subtitle{font-size:16px;}
+  .title{font-size:120px;}
+  .subtitle{font-size:20px;}
+  #memberCounter{font-size:20px;}
 }
 </style>
 </head>
@@ -111,6 +85,9 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 <button class="join-btn" onclick="joinVIP()">JOIN</button>
 </div>
 </div>
+
+<!-- Counter poshtë background-it -->
+<div id="memberCounter">0 Members</div>
 
 <script>
 const canvas = document.getElementById("bgCanvas");
@@ -186,6 +163,28 @@ function animate(){
 
   requestAnimationFrame(animate);
 }
+
+/* =========================
+   MEMBER COUNTER 0 → 1752 IN 4 SEC
+   ========================= */
+const counterEl = document.getElementById("memberCounter");
+const targetNumber = 1752;
+const duration = 4000; // 4 sekonda
+let startTime = null;
+
+function countUp(timestamp){
+  if(!startTime) startTime = timestamp;
+  let progress = timestamp - startTime;
+  let current = Math.min(Math.floor((progress/duration)*targetNumber), targetNumber);
+  counterEl.textContent = current + " Members";
+  if(progress < duration){
+    requestAnimationFrame(countUp);
+  } else {
+    counterEl.textContent = targetNumber + " Members";
+  }
+}
+
+requestAnimationFrame(countUp);
 
 animate();
 
