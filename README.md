@@ -73,7 +73,7 @@
             border: 1px solid var(--border);
             padding: 50px;
             width: 90%;
-            max-width: 450px;
+            max-width: 500px;
             border-radius: 24px;
             backdrop-filter: blur(20px);
             position: relative;
@@ -102,18 +102,29 @@
 
         .vip-title {
             font-family: 'Syncopate', sans-serif;
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 30px;
-            letter-spacing: 4px;
+            letter-spacing: 6px;
+            color: var(--cyan);
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
         }
 
         .features-list { list-style: none; text-align: left; margin-bottom: 30px; }
         .features-list li {
-            padding: 12px 0;
+            padding: 15px 0;
             border-bottom: 1px solid var(--border);
-            font-size: 14px;
+            font-size: 13px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .features-list li span:last-child {
+            color: var(--cyan);
+            font-weight: 700;
+            text-align: right;
         }
 
         .join-btn {
@@ -138,8 +149,9 @@
         #memberCounter {
             margin-top: 25px;
             font-family: 'Syncopate', sans-serif;
-            font-size: 18px;
-            color: rgba(255,255,255,0.5);
+            font-size: 16px;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 2px;
         }
 
         /* --- ANIMATIONS --- */
@@ -158,6 +170,7 @@
         @media(max-width: 768px) {
             .title { font-size: 70px; letter-spacing: -2px; }
             .vip-card { padding: 30px; }
+            .features-list li { font-size: 11px; }
         }
     </style>
 </head>
@@ -176,14 +189,14 @@
     </div>
 
     <div class="vip-card">
-        <h2 class="vip-title">The Inner Sanctum</h2>
+        <h2 class="vip-title">VIP ZONE</h2>
         <ul class="features-list">
-            <li><span>Tier-1 Alpha Signals</span> <span>[ENCRYPTED]</span></li>
-            <li><span>Strike Precision</span> <span>57.0% - 60.0%</span></li>
-            <li><span>Market Frequency</span> <span>High Volume / Daily</span></li>
+            <li><span>Tier Alpha Signals</span> <span>Daily Forex Signals</span></li>
+            <li><span>Strike Precision</span> <span>57% - 60% Guaranteed Win Rate</span></li>
+            <li><span>Market Frequency</span> <span>3 Signals Per Day (Sometimes More)</span></li>
         </ul>
-        <button class="join-btn" onclick="joinVIP()">Claim Your Seat</button>
-        <div id="memberCounter">0 High-Net-Worth Members</div>
+        <button class="join-btn" onclick="joinVIP()">Claim Access</button>
+        <div id="memberCounter">0 Elite Members</div>
     </div>
 </div>
 
@@ -276,7 +289,7 @@
     };
 
     function joinVIP() {
-        document.querySelector('.vip-card').style.transform = "scale(0.9)";
+        document.querySelector('.vip-card').style.transform = "scale(0.95)";
         setTimeout(() => {
             alert("ACCESS GRANTED. WELCOME TO THE FRONT LINE.");
         }, 200);
