@@ -10,23 +10,87 @@
 body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .container {text-align:center; padding:100px 20px;}
-.title {font-size:80px; font-weight:800; position:relative; opacity:0; animation:fadeIn 2s forwards; letter-spacing:5px;}
-@keyframes fadeIn {0%{opacity:0;}100%{opacity:1;}}
-.subtitle {margin-top:20px;font-size:20px;opacity:0;transform:translateY(20px);animation:slideIn 1.5s forwards;}
+
+/* ------------------- FUTURISTIC NEON GLOW ------------------- */
+.title {
+  font-family:'Cinzel', serif;
+  font-size:80px;
+  color:#0ff;
+  text-shadow:0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
+  position:relative;
+  opacity:0;
+  animation:fadeIn 2s forwards;
+  letter-spacing:5px;
+}
+.subtitle {
+  margin-top:20px;
+  font-size:20px;
+  color:#0ff;
+  text-shadow:0 0 5px #0ff;
+  opacity:0;
+  transform:translateY(20px);
+  animation:slideIn 1.5s forwards;
+}
 .subtitle:nth-child(2){animation-delay:0.5s;}
 .subtitle:nth-child(3){animation-delay:0.8s;}
 .subtitle:nth-child(4){animation-delay:1.1s;}
+@keyframes fadeIn {0%{opacity:0;}100%{opacity:1;}}
 @keyframes slideIn {to{opacity:1; transform:translateY(0);}}
-.vip-card {margin:80px auto;background:rgba(255,255,255,0.05);padding:40px;width:90%;max-width:400px;border-radius:15px;box-shadow:0 0 30px rgba(0,0,0,0.8);transition:0.4s;backdrop-filter:blur(8px);}
-.vip-card:hover{transform:translateY(-10px);box-shadow:0 0 40px rgba(255,255,255,0.2);}
-.vip-title{font-family:'Cinzel', serif;font-size:28px;margin-bottom:20px;color:#fff;}
-.vip-text{margin:10px 0;opacity:0;transform:translateY(20px);animation:slideIn 1.5s forwards;color:#eee;}
+
+.vip-card {
+  margin:80px auto;
+  background:rgba(0,0,0,0.3);
+  border:2px solid #0ff;
+  padding:40px;
+  width:90%;
+  max-width:400px;
+  border-radius:18px;
+  box-shadow:0 0 30px #0ff;
+  backdrop-filter:blur(12px);
+  transition:0.5s;
+}
+.vip-card:hover {
+  transform:translateY(-8px);
+  box-shadow:0 0 50px #0ff;
+}
+.vip-title {
+  font-family:'Cinzel', serif;
+  font-size:28px;
+  margin-bottom:20px;
+  color:#0ff;
+}
+.vip-text {
+  margin:10px 0;
+  color:#0ff;
+  opacity:0;
+  transform:translateY(20px);
+  animation:slideIn 1.5s forwards;
+}
 .vip-text:nth-child(2){animation-delay:1.2s;}
 .vip-text:nth-child(3){animation-delay:1.5s;}
 .vip-text:nth-child(4){animation-delay:1.8s;}
-.join-btn{margin-top:20px;padding:12px 30px;background:gray;border:none;border-radius:8px;color:white;font-size:16px;cursor:pointer;transition:0.3s;}
-.join-btn:hover{background:white;color:black;}
-@media(max-width:768px){.title{font-size:50px;} .subtitle{font-size:16px;}}
+
+.join-btn {
+  margin-top:20px;
+  padding:12px 30px;
+  background:#0ff;
+  border:none;
+  border-radius:8px;
+  color:black;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+.join-btn:hover {
+  background:white;
+  color:#0ff;
+}
+
+@media(max-width:768px){
+  .title{font-size:50px;}
+  .subtitle{font-size:16px;}
+}
 </style>
 </head>
 <body>
@@ -62,7 +126,6 @@ window.addEventListener("resize", resize);
 /* =========================
    NEURAL NETWORK ENGINE
    ========================= */
-
 const nodes = [];
 const NODE_COUNT = 120;
 const MAX_DISTANCE = 150;
@@ -80,20 +143,16 @@ for(let i=0;i<NODE_COUNT;i++){
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // dark gradient
   const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
   gradient.addColorStop(0,"#050510");
   gradient.addColorStop(1,"#000000");
   ctx.fillStyle = gradient;
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  // update + draw lines
   for(let i=0;i<nodes.length;i++){
     let n = nodes[i];
-
     n.x += n.vx;
     n.y += n.vy;
-
     if(n.x<0||n.x>canvas.width) n.vx*=-1;
     if(n.y<0||n.y>canvas.height) n.vy*=-1;
 
@@ -102,7 +161,6 @@ function animate(){
       let dx = n.x - n2.x;
       let dy = n.y - n2.y;
       let dist = Math.sqrt(dx*dx+dy*dy);
-
       if(dist < MAX_DISTANCE){
         ctx.strokeStyle = "rgba(0,200,255,"+(1-dist/MAX_DISTANCE)+")";
         ctx.lineWidth = 1;
@@ -114,11 +172,9 @@ function animate(){
     }
   }
 
-  // draw nodes
   nodes.forEach(n=>{
     n.pulse += 0.05;
     let glow = 2 + Math.sin(n.pulse)*1.5;
-
     ctx.beginPath();
     ctx.arc(n.x,n.y,glow,0,Math.PI*2);
     ctx.fillStyle = "rgba(0,255,255,0.9)";
