@@ -13,12 +13,9 @@ body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .container {text-align:center; padding:40px 20px; position:relative; z-index:1; perspective:1500px;}
 
-
-  
+/* ========================= */
 /* XMONEY SUPER HERO TITLE  */
-
-
-  
+/* ========================= */
 .title {
   position:relative;
   display:block;
@@ -31,9 +28,8 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   color:#ffffff;
   text-transform:uppercase;
   overflow:hidden;
-  opacity:0;
-  animation:fadeIn 2s ease forwards;
-  margin-bottom:20px; /* shton hapësirë nga tekstet poshtë */
+  opacity:1; /* pa efekt fade-in në këtë version */
+  margin-bottom:20px; /* hapësirë poshtë titullit për subtitujt */
 }
 
 /* ========================= */
@@ -45,23 +41,12 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   font-weight:300;
   letter-spacing:3px;
   color:#e6faff;
-  opacity:0;
-  animation:subtitleFade 2s ease forwards;
+  opacity:1; /* pa efekt fade-in */
 }
 
-.subtitle:nth-child(2){animation-delay:0.8s;}
-.subtitle:nth-child(3){animation-delay:1.2s;}
-.subtitle:nth-child(4){animation-delay:1.6s;}
-
-@keyframes subtitleFade {
-  from {opacity:0; transform:translateY(20px);}
-  to {opacity:1; transform:translateY(0);}
-}
-
-@keyframes fadeIn {
-  from {opacity:0; transform:translateY(40px);}
-  to {opacity:1; transform:translateY(0);}
-}
+.subtitle:nth-child(2){}
+.subtitle:nth-child(3){}
+.subtitle:nth-child(4){}
 
 /* ========================= */
 /* VIP CARD                 */
@@ -86,13 +71,9 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .vip-text {
   margin:10px 0;
   color:#0ff;
-  opacity:0;
-  transform:translateY(20px);
-  animation:slideIn 1.5s forwards;
+  opacity:1;
+  transform:translateY(0);
 }
-.vip-text:nth-child(2){animation-delay:1.2s;}
-.vip-text:nth-child(3){animation-delay:1.5s;}
-.vip-text:nth-child(4){animation-delay:1.8s;}
 .join-btn {
   margin-top:20px;
   padding:12px 30px;
@@ -106,8 +87,6 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   transition:0.3s;
 }
 .join-btn:hover {background:white;color:#0ff;}
-
-@keyframes slideIn {to{opacity:1; transform:translateY(0);}}
 
 /* COUNTER */
 #memberCounter {
@@ -125,7 +104,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 <canvas id="bgCanvas"></canvas>
 
 <div class="container">
-<h1 class="title">XMONEY</h1>
+<h1 class="title">XMONEY</h1> <!-- Titulli është lart, pa vijë nën të -->
 <p class="subtitle">The Billionaire Circle</p>
 <p class="subtitle">We Print Money Like a Factory</p>
 <p class="subtitle">Forex Is Our Game</p>
