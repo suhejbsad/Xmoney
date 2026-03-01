@@ -6,33 +6,58 @@
 <title>Xmoney</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&family=Cinzel:wght@600&display=swap" rel="stylesheet">
 <style>
-body, html {margin:0; padding:0; overflow:hidden; background:#000; font-family:'Poppins', sans-serif;}
-#introVideo {position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:999;}
-.container {opacity:0; transition:opacity 1s ease; position:relative; z-index:1; text-align:center; padding:100px 20px;}
-.title {font-family:'Cinzel', serif; font-size:240px; color:white; letter-spacing:5px; opacity:0; animation:fadeIn 2s forwards 0.2s;}
-.subtitle {margin-top:20px; font-size:20px; color:white; opacity:0; transform:translateY(20px); animation:slideIn 1.5s forwards;}
-.subtitle:nth-child(2){animation-delay:0.5s;} .subtitle:nth-child(3){animation-delay:0.8s;} .subtitle:nth-child(4){animation-delay:1.1s;}
+* {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
+body {background:#000; color:white; overflow:hidden;}
+canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
+.container {text-align:center; padding:100px 20px; position:relative; z-index:1;}
+
+/* ------------------- Xmoney SUPER BOLD ------------------- */
+.title {
+  font-family:'Cinzel', serif;
+  font-size:240px; 
+  color:white;
+  letter-spacing:5px;
+  position:relative;
+  opacity:0;
+  animation:fadeIn 2s forwards;
+}
+.subtitle {
+  margin-top:20px;
+  font-size:20px;
+  color:white;
+  opacity:0;
+  transform:translateY(20px);
+  animation:slideIn 1.5s forwards;
+}
+.subtitle:nth-child(2){animation-delay:0.5s;}
+.subtitle:nth-child(3){animation-delay:0.8s;}
+.subtitle:nth-child(4){animation-delay:1.1s;}
 @keyframes fadeIn {0%{opacity:0;}100%{opacity:1;}}
 @keyframes slideIn {to{opacity:1; transform:translateY(0);}}
-.vip-card {margin:80px auto; background:rgba(0,0,0,0.3); border:2px solid #0ff; padding:40px; width:90%; max-width:400px; border-radius:18px; box-shadow:0 0 30px #0ff; backdrop-filter:blur(12px); transition:0.5s;}
-.vip-card:hover {transform:translateY(-8px); box-shadow:0 0 50px #0ff;}
-.vip-title {font-family:'Cinzel', serif; font-size:28px; margin-bottom:20px; color:#0ff;}
-.vip-text {margin:10px 0; color:#0ff; opacity:0; transform:translateY(20px); animation:slideIn 1.5s forwards;}
-.vip-text:nth-child(2){animation-delay:1.2s;} .vip-text:nth-child(3){animation-delay:1.5s;} .vip-text:nth-child(4){animation-delay:1.8s;}
-.join-btn {margin-top:20px; padding:12px 30px; background:#0ff; border:none; border-radius:8px; color:black; font-size:16px; font-weight:bold; cursor:pointer; transition:0.3s;}
-.join-btn:hover {background:white; color:#0ff;}
+
+/* VIP Card */
+.vip-card {margin:80px auto;background:rgba(0,0,0,0.3);border:2px solid #0ff;padding:40px;width:90%;max-width:400px;border-radius:18px;box-shadow:0 0 30px #0ff;backdrop-filter:blur(12px);transition:0.5s;}
+.vip-card:hover {transform:translateY(-8px);box-shadow:0 0 50px #0ff;}
+.vip-title {font-family:'Cinzel', serif;font-size:28px;margin-bottom:20px;color:#0ff;}
+.vip-text {margin:10px 0;color:#0ff;opacity:0;transform:translateY(20px);animation:slideIn 1.5s forwards;}
+.vip-text:nth-child(2){animation-delay:1.2s;}
+.vip-text:nth-child(3){animation-delay:1.5s;}
+.vip-text:nth-child(4){animation-delay:1.8s;}
+.join-btn {margin-top:20px;padding:12px 30px;background:#0ff;border:none;border-radius:8px;color:black;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;}
+.join-btn:hover {background:white;color:#0ff;}
 #memberCounter {margin-top:20px; font-size:20px; color:white; text-align:center; font-weight:bold;}
+@media(max-width:768px){
+  .title{font-size:120px;}
+  .subtitle{font-size:16px;}
+  #memberCounter{font-size:16px;}
+}
 </style>
 </head>
 <body>
 
-<!-- VIDEO INTRO 3 SEKONDA -->
-<video id="introVideo" autoplay muted playsinline>
-  <source src="/mnt/data/a_3d_rendered_animated_scene_lasts_for_three_secon.png" type="video/mp4">
-</video>
+<canvas id="bgCanvas"></canvas>
 
-<!-- MAIN CONTENT -->
-<div class="container" id="mainContent">
+<div class="container">
 <h1 class="title">Xmoney</h1>
 <p class="subtitle">The Billionaire Circle</p>
 <p class="subtitle">We Print Money Like a Factory</p>
@@ -48,24 +73,76 @@ body, html {margin:0; padding:0; overflow:hidden; background:#000; font-family:'
 </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/three@0.156.0/build/three.min.js"></script>
 <script>
-// kur video perfundon, fsheh video dhe shfaq faqen
-const introVideo = document.getElementById("introVideo");
-const mainContent = document.getElementById("mainContent");
+// ---------------- Holographic Grid Background ----------------
+const canvas = document.getElementById("bgCanvas");
+const renderer = new THREE.WebGLRenderer({canvas: canvas, antialias:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 
-introVideo.onended = () => {
-  introVideo.style.display = "none";
-  mainContent.style.opacity = 1;
-};
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.set(0,2,5);
 
-// MEMBER COUNTER
+// Grid Group
+const gridGroup = new THREE.Group();
+scene.add(gridGroup);
+
+const gridMaterial = new THREE.LineBasicMaterial({color:0x00ffff, transparent:true, opacity:0.6});
+const gridSize = 20;
+const gridDivisions = 40;
+
+for(let i=-gridSize;i<=gridSize;i+=gridSize/gridDivisions){
+  const geometryX = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-gridSize,0,i), new THREE.Vector3(gridSize,0,i)]);
+  const geometryZ = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(i,0,-gridSize), new THREE.Vector3(i,0,gridSize)]);
+  gridGroup.add(new THREE.Line(geometryX, gridMaterial));
+  gridGroup.add(new THREE.Line(geometryZ, gridMaterial));
+}
+
+// Floating points above grid
+const pointGeometry = new THREE.SphereGeometry(0.05,8,8);
+const pointMaterial = new THREE.MeshBasicMaterial({color:0x00ffff});
+const points = [];
+for(let i=0;i<150;i++){
+  const point = new THREE.Mesh(pointGeometry, pointMaterial);
+  point.position.set((Math.random()-0.5)*gridSize*2, Math.random()*2, (Math.random()-0.5)*gridSize*2);
+  scene.add(point);
+  points.push(point);
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  const time = performance.now() * 0.001;
+
+  // Rotate grid slowly
+  gridGroup.rotation.y = time * 0.05;
+  gridGroup.rotation.x = Math.sin(time*0.2)*0.05;
+
+  // Make points pulse
+  points.forEach(p=>{
+    p.position.y = Math.sin(time + p.position.x + p.position.z)*0.5 + 1;
+  });
+
+  renderer.render(scene,camera);
+}
+animate();
+
+window.addEventListener("resize", ()=>{
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+});
+
+// ---------------- MEMBER COUNTER ----------------
 const counterEl = document.getElementById("memberCounter");
 const targetNumber = 1752;
 const duration = 4000;
-let counterStart = null;
+let startTime = null;
+
 function countUp(timestamp){
-  if(!counterStart) counterStart = timestamp;
-  let progress = timestamp - counterStart;
+  if(!startTime) startTime = timestamp;
+  let progress = timestamp - startTime;
   let current = Math.min(Math.floor((progress/duration)*targetNumber), targetNumber);
   counterEl.textContent = current + " Members";
   if(progress < duration) requestAnimationFrame(countUp);
