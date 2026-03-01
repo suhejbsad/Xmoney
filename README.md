@@ -32,7 +32,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   margin-top:20px; 
   font-size:20px; 
   color:#fff; /* Bardhë */
-  text-shadow: 0 0 5px #fff, 0 0 10px #fff; /* Neon i lehtë */
+  text-shadow: 0 0 2px #fff, 0 0 4px #fff; /* Glow më i lehtë */
   opacity:0; 
   transform:translateY(20px);
   animation:slideIn 1.5s forwards;
@@ -61,12 +61,14 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   font-size:30px; 
   margin-bottom:20px; 
   color:#fff; /* Bardhë */
-  text-shadow: 0 0 5px #fff, 0 0 10px #fff;
+  text-shadow: 0 0 2px #fff, 0 0 4px #fff; /* Glow më i lehtë */
+  position: relative;
+  left: 20px; /* zhvendos pak VIP ZONE djathtas */
 }
 .vip-text {
   margin:10px 0; 
   color:#fff; /* Bardhë */
-  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
+  text-shadow: 0 0 1px #fff, 0 0 2px #fff; /* Glow shumë i lehtë */
   opacity:0; 
   transform:translateY(20px); 
   animation:slideIn 1.5s forwards;
@@ -86,12 +88,12 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   font-weight:bold; 
   cursor:pointer; 
   transition:0.3s;
-  text-shadow: 0 0 2px #fff, 0 0 4px #fff;
+  text-shadow: 0 0 1px #fff, 0 0 2px #fff; /* Glow i lehtë */
 }
 .join-btn:hover { 
   background:#eee; 
   color:black; 
-  box-shadow: 0 0 10px #fff; 
+  box-shadow: 0 0 5px #fff; 
 }
 
 /* ==================== MEMBER COUNTER & MENTOR STATS ==================== */
@@ -109,7 +111,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   font-size:22px;
   font-weight:bold;
   color:#fff; /* Bardhë */
-  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
+  text-shadow: 0 0 1px #fff, 0 0 2px #fff; /* Glow i lehtë */
   opacity:0;
   animation:slideUp 1.5s forwards;
 }
@@ -120,7 +122,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
   font-size:18px; 
   margin:5px 0; 
   color:#fff; 
-  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
+  text-shadow: 0 0 1px #fff, 0 0 2px #fff; /* Glow i lehtë */
 }
 @keyframes slideUp {to{opacity:1; transform:translateY(0);}}
 
@@ -202,7 +204,7 @@ function animate(){
       let n2=nodes[j];
       let dx=n.x-n2.x, dy=n.y-n2.y, dist=Math.sqrt(dx*dx+dy*dy);
       if(dist<MAX_DISTANCE){
-        ctx.strokeStyle="rgba(0,255,255,"+(1-dist/MAX_DISTANCE)*0.6+")"; // pakso intensitetin
+        ctx.strokeStyle="rgba(0,255,255,"+(1-dist/MAX_DISTANCE)*0.6+")";
         ctx.lineWidth=1;
         ctx.beginPath(); ctx.moveTo(n.x,n.y); ctx.lineTo(n2.x,n2.y); ctx.stroke();
       }
