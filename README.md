@@ -11,22 +11,20 @@ body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .container {text-align:center; padding:100px 20px; position:relative; z-index:1;}
 
-/* ------------------- FUTURISTIC NEON GLOW UPDATED ------------------- */
+/* ------------------- Xmoney SUPER BOLD ------------------- */
 .title {
   font-family:'Cinzel', serif;
   font-size:240px; /* 3x më i madh */
   color:white;
-  text-shadow:0 0 15px #fff,0 0 30px #fff,0 0 45px #fff;
+  letter-spacing:5px;
   position:relative;
   opacity:0;
   animation:fadeIn 2s forwards;
-  letter-spacing:5px;
 }
 .subtitle {
   margin-top:20px;
-  font-size:40px; /* më i dukshëm */
+  font-size:20px; /* madhësi normale si më parë */
   color:white;
-  text-shadow:0 0 5px #fff;
   opacity:0;
   transform:translateY(20px);
   animation:slideIn 1.5s forwards;
@@ -48,22 +46,19 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .join-btn {margin-top:20px;padding:12px 30px;background:#0ff;border:none;border-radius:8px;color:black;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;}
 .join-btn:hover {background:white;color:#0ff;}
 
-/* NUMRI NË POSHT BACKGROUND */
+/* COUNTER POSHT PLAKATES VIP */
 #memberCounter {
-  position:absolute;
-  bottom:40px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:32px;
+  margin-top:20px;
+  font-size:20px;
   color:white;
+  text-align:center;
   font-weight:bold;
-  text-shadow:0 0 5px #fff;
-  z-index:1;
+  text-shadow:none; /* shndritja e ulur */
 }
 @media(max-width:768px){
   .title{font-size:120px;}
-  .subtitle{font-size:20px;}
-  #memberCounter{font-size:20px;}
+  .subtitle{font-size:16px;}
+  #memberCounter{font-size:16px;}
 }
 </style>
 </head>
@@ -83,11 +78,11 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 <p class="vip-text">2 - 55% - 60% Guaranteed Win Rate</p>
 <p class="vip-text">3 - 3 Signals Per Day (Sometimes More)</p>
 <button class="join-btn" onclick="joinVIP()">JOIN</button>
-</div>
-</div>
 
-<!-- Counter poshtë background-it -->
+<!-- MEMBER COUNTER POSHT PLAKATES -->
 <div id="memberCounter">0 Members</div>
+</div>
+</div>
 
 <script>
 const canvas = document.getElementById("bgCanvas");
@@ -186,9 +181,8 @@ function countUp(timestamp){
 
 requestAnimationFrame(countUp);
 
-animate();
-
 function joinVIP(){ alert("Welcome to the VIP zone!"); }
+animate();
 </script>
 
 </body>
