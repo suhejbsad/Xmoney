@@ -64,27 +64,36 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 .join-btn {margin-top:20px; padding:14px 32px; background:#0ff; border:none; border-radius:10px; color:black; font-size:16px; font-weight:bold; cursor:pointer; transition:0.3s;}
 .join-btn:hover {background:white; color:#0ff;}
 
-/* ==================== MEMBER COUNTER ==================== */
-#memberCounter {
+/* ==================== MEMBER COUNTER & MENTOR STATS ==================== */
+#statsWrapper {
   position:absolute;
-  left:20px;
-  bottom:50px;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  justify-content:space-between;
+  width:90%;
+  max-width:900px;
+}
+
+#memberCounter, #mentorStats {
   font-size:22px;
   font-weight:bold;
   color:white;
+  opacity:0;
+  animation:slideUp 1.5s forwards;
 }
+#memberCounter {color:#fff; text-align:right; flex:1;}
+#mentorStats {color:#fff; text-align:left; flex:1;}
+#mentorStats span {display:block; font-size:18px; margin:5px 0; color:#0ff;}
+@keyframes slideUp {to{opacity:1; transform:translateY(0);}}
 
-/* ==================== MENTOR STATS ==================== */
-#mentorStats {
-  position:absolute;
-  right:20px;
-  top:200px;
-  font-size:20px;
-  text-align:right;
-  line-height:2;
-  color:#0ff;
+/* ==================== MEDIA ==================== */
+@media(max-width:768px){
+  .title{font-size:120px;}
+  .subtitle{font-size:16px;}
+  #memberCounter, #mentorStats {font-size:16px;}
 }
-#mentorStats span{display:block; font-weight:bold; color:white;}
 </style>
 </head>
 <body>
@@ -106,14 +115,14 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 </div>
 </div>
 
-<!-- Member counter jasht pllakates -->
-<div id="memberCounter">0 Members</div>
-
-<!-- Mentor Stats djathtas -->
-<div id="mentorStats">
-<span id="winRate">Win Rate: 0%</span>
-<span id="winTrade">Win Trade: 0</span>
-<span id="lossTrade">Loss Trade: 0</span>
+<!-- Stats poshtë pllakates -->
+<div id="statsWrapper">
+  <div id="mentorStats">
+    <span id="winRate">Win Rate: 0%</span>
+    <span id="winTrade">Win Trade: 0</span>
+    <span id="lossTrade">Loss Trade: 0</span>
+  </div>
+  <div id="memberCounter">0 Members</div>
 </div>
 
 <script>
@@ -124,7 +133,7 @@ function resize(){ canvas.width = window.innerWidth; canvas.height = window.inne
 resize();
 window.addEventListener("resize", resize);
 
-// ==================== Fluid Neon Background ====================
+// ==================== Neon Fluid Background ====================
 const nodes = [];
 const NODE_COUNT = 150;
 const MAX_DISTANCE = 180;
@@ -141,83 +150,64 @@ for(let i=0;i<NODE_COUNT;i++){
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  // Gradient background
   const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
   gradient.addColorStop(0,"#000010");
   gradient.addColorStop(1,"#000000");
   ctx.fillStyle = gradient;
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  // Draw lines
   for(let i=0;i<nodes.length;i++){
-    let n = nodes[i];
-    n.x += n.vx; n.y += n.vy;
+    let n=nodes[i];
+    n.x+=n.vx; n.y+=n.vy;
     if(n.x<0||n.x>canvas.width) n.vx*=-1;
     if(n.y<0||n.y>canvas.height) n.vy*=-1;
 
     for(let j=i+1;j<nodes.length;j++){
-      let n2 = nodes[j];
-      let dx = n.x - n2.x; let dy = n.y - n2.y;
-      let dist = Math.sqrt(dx*dx+dy*dy);
-      if(dist < MAX_DISTANCE){
-        ctx.strokeStyle = "rgba(0,255,255,"+(1-dist/MAX_DISTANCE)+")";
-        ctx.lineWidth = 1.2;
+      let n2=nodes[j];
+      let dx=n.x-n2.x, dy=n.y-n2.y, dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<MAX_DISTANCE){
+        ctx.strokeStyle="rgba(0,255,255,"+(1-dist/MAX_DISTANCE)+")";
+        ctx.lineWidth=1.2;
         ctx.beginPath(); ctx.moveTo(n.x,n.y); ctx.lineTo(n2.x,n2.y); ctx.stroke();
       }
     }
   }
 
-  // Glowing nodes
   nodes.forEach(n=>{
-    n.pulse += 0.07;
-    let glow = 2 + Math.sin(n.pulse)*2;
+    n.pulse+=0.07;
+    let glow=2+Math.sin(n.pulse)*2;
     ctx.beginPath();
     ctx.arc(n.x,n.y,glow,0,Math.PI*2);
-    ctx.fillStyle = "rgba(0,255,255,0.9)";
-    ctx.shadowColor = "cyan";
-    ctx.shadowBlur = 15;
+    ctx.fillStyle="rgba(0,255,255,0.9)";
+    ctx.shadowColor="cyan";
+    ctx.shadowBlur=15;
     ctx.fill();
-    ctx.shadowBlur = 0;
+    ctx.shadowBlur=0;
   });
 
   requestAnimationFrame(animate);
 }
 animate();
 
-// ==================== MEMBER COUNTER ====================
-const counterEl = document.getElementById("memberCounter");
-const targetMembers = 1752; const duration=4000; let startTime=null;
-function countUp(timestamp){
-  if(!startTime) startTime=timestamp;
-  let progress = timestamp-startTime;
-  let current = Math.min(Math.floor((progress/duration)*targetMembers),targetMembers);
-  counterEl.textContent = current+" Members";
-  if(progress<duration) requestAnimationFrame(countUp);
-}
-requestAnimationFrame(countUp);
+// ==================== Members Count ====================
+const memberEl = document.getElementById("memberCounter");
+animateNumber(memberEl,1752," Members");
 
-// ==================== MENTOR STATS ANIMATION ====================
-const winRateEl = document.getElementById("winRate");
-const winTradeEl = document.getElementById("winTrade");
-const lossTradeEl = document.getElementById("lossTrade");
+// ==================== Mentor Stats ====================
+animateNumber(document.getElementById("winRate"),57,"%","Win Rate: ");
+animateNumber(document.getElementById("winTrade"),3831,"","Win Trade: ");
+animateNumber(document.getElementById("lossTrade"),2527,"","Loss Trade: ");
 
-animateNumber(winRateEl,57,'%');
-animateNumber(winTradeEl,3831,'');
-animateNumber(lossTradeEl,2527,'');
-
-function animateNumber(el, target, suffix){
-  let start=0;
-  let duration=4000;
-  let startTime=null;
-  function animateNumberStep(timestamp){
+function animateNumber(el,target,suffix="",prefix=""){
+  let start=0,duration=4000,startTime=null;
+  function step(timestamp){
     if(!startTime) startTime=timestamp;
     let progress=timestamp-startTime;
-    let current=Math.min(Math.floor((progress/duration)*target),target);
-    el.textContent = el.id.includes('Rate') ? `Win Rate: ${current}${suffix}` : `${el.id.replace(/([A-Z])/g,' $1')}: ${current}${suffix}`;
-    if(progress<duration) requestAnimationFrame(animateNumberStep);
+    let current=Math.min(Math.floor(progress/duration*target),target);
+    el.textContent=prefix+current+suffix;
+    if(progress<duration) requestAnimationFrame(step);
   }
-  requestAnimationFrame(animateNumberStep);
+  requestAnimationFrame(step);
 }
 
 function joinVIP(){ alert("Welcome to the VIP zone!"); }
