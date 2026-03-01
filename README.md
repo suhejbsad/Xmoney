@@ -133,10 +133,10 @@ function resize(){ canvas.width = window.innerWidth; canvas.height = window.inne
 resize();
 window.addEventListener("resize", resize);
 
-// ==================== Neon Fluid Background ====================
+// ==================== Neon Fluid Background with LESS LINES ====================
 const nodes = [];
 const NODE_COUNT = 150;
-const MAX_DISTANCE = 180;
+const MAX_DISTANCE = 100; // paksojm vijat
 
 for(let i=0;i<NODE_COUNT;i++){
   nodes.push({
@@ -166,8 +166,8 @@ function animate(){
       let n2=nodes[j];
       let dx=n.x-n2.x, dy=n.y-n2.y, dist=Math.sqrt(dx*dx+dy*dy);
       if(dist<MAX_DISTANCE){
-        ctx.strokeStyle="rgba(0,255,255,"+(1-dist/MAX_DISTANCE)+")";
-        ctx.lineWidth=1.2;
+        ctx.strokeStyle="rgba(0,255,255,"+(1-dist/MAX_DISTANCE)*0.6+")"; // pakso intensitetin
+        ctx.lineWidth=1;
         ctx.beginPath(); ctx.moveTo(n.x,n.y); ctx.lineTo(n2.x,n2.y); ctx.stroke();
       }
     }
