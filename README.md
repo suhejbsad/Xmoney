@@ -4,149 +4,87 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Xmoney</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Montserrat:wght@200;300&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&family=Cinzel:wght@600&display=swap" rel="stylesheet">
 <style>
 * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
 body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
-.container {text-align:center; padding:40px 20px; position:relative; z-index:1; perspective:1500px;}
+.container {text-align:center; padding:100px 20px; position:relative; z-index:1;}
 
-/* ========================= */
-/* XMONEY TITLE ANIMATED    */
-/* ========================= */
+/* ------------------- Xmoney SUPER BOLD ------------------- */
 .title {
+  font-family:'Cinzel', serif;
+  font-size:240px; /* 3x më i madh */
+  color:white;
+  letter-spacing:5px;
   position:relative;
-  display:block;
-  width:100%;
-  text-align:center;
-  font-family:'Montserrat', sans-serif;
-  font-weight:200;
-  font-size:clamp(120px, 22vw, 1000px);
-  letter-spacing:20px;
-  color:#ffffff;
-  text-transform:uppercase;
-  overflow:hidden;
   opacity:0;
-  animation:fadeIn 2s ease forwards;
+  animation:fadeIn 2s forwards;
 }
-
-@keyframes fadeIn {
-  from {opacity:0; transform:translateY(40px);}
-  to {opacity:1; transform:translateY(0);}
-}
-
-/* ========================= */
-/* SUBTITLES                */
-/* ========================= */
 .subtitle {
-  margin-top:10px;
-  font-size:18px;
-  font-weight:300;
-  letter-spacing:3px;
-  color:#e6faff;
-  opacity:0;
-  animation:subtitleFade 2s ease forwards;
-}
-
-.subtitle:nth-child(2){animation-delay:0.8s;}
-.subtitle:nth-child(3){animation-delay:1.2s;}
-.subtitle:nth-child(4){animation-delay:1.6s;}
-
-@keyframes subtitleFade {
-  from {opacity:0; transform:translateY(20px);}
-  to {opacity:1; transform:translateY(0);}
-}
-
-/* ========================= */
-/* VIP CARD                 */
-/* ========================= */
-.vip-card {
-  margin:80px auto;
-  background:rgba(0,0,0,0.3);
-  border:2px solid #0ff;
-  padding:40px;
-  width:90%;
-  max-width:400px;
-  border-radius:18px;
-  box-shadow:0 0 30px #0ff;
-  backdrop-filter:blur(12px);
-  transition:0.5s;
-  text-align:left; /* për ti dhënë hapësirë tekstit në të djathtë */
-  transform: translateX(20px); /* zhvendos pak në të djathtë */
-}
-.vip-card:hover {
-  transform:translateY(-8px) translateX(20px);
-  box-shadow:0 0 50px #0ff;
-}
-.vip-title {
-  font-size:28px;
-  margin-bottom:20px;
-  color:#ffffff; /* teksti bardhë */
-}
-.vip-text {
-  margin:10px 0;
-  color:#ffffff; /* teksti bardhë */
+  margin-top:20px;
+  font-size:20px; /* madhësi normale si më parë */
+  color:white;
   opacity:0;
   transform:translateY(20px);
   animation:slideIn 1.5s forwards;
 }
+.subtitle:nth-child(2){animation-delay:0.5s;}
+.subtitle:nth-child(3){animation-delay:0.8s;}
+.subtitle:nth-child(4){animation-delay:1.1s;}
+@keyframes fadeIn {0%{opacity:0;}100%{opacity:1;}}
+@keyframes slideIn {to{opacity:1; transform:translateY(0);}}
+
+/* VIP Card nuk preket */
+.vip-card {margin:80px auto;background:rgba(0,0,0,0.3);border:2px solid #0ff;padding:40px;width:90%;max-width:400px;border-radius:18px;box-shadow:0 0 30px #0ff;backdrop-filter:blur(12px);transition:0.5s;}
+.vip-card:hover {transform:translateY(-8px);box-shadow:0 0 50px #0ff;}
+.vip-title {font-family:'Cinzel', serif;font-size:28px;margin-bottom:20px;color:#0ff;}
+.vip-text {margin:10px 0;color:#0ff;opacity:0;transform:translateY(20px);animation:slideIn 1.5s forwards;}
 .vip-text:nth-child(2){animation-delay:1.2s;}
 .vip-text:nth-child(3){animation-delay:1.5s;}
 .vip-text:nth-child(4){animation-delay:1.8s;}
-
-@keyframes slideIn {
-  to {opacity:1; transform:translateY(0);}
-}
-
-.join-btn {
-  margin-top:20px;
-  padding:12px 30px;
-  background:#0ff;
-  border:none;
-  border-radius:8px;
-  color:black;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
-}
+.join-btn {margin-top:20px;padding:12px 30px;background:#0ff;border:none;border-radius:8px;color:black;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;}
 .join-btn:hover {background:white;color:#0ff;}
 
-/* COUNTER */
+/* COUNTER POSHT PLAKATES VIP */
 #memberCounter {
   margin-top:20px;
   font-size:20px;
   color:white;
   text-align:center;
   font-weight:bold;
+  text-shadow:none; /* shndritja e ulur */
+}
+@media(max-width:768px){
+  .title{font-size:120px;}
+  .subtitle{font-size:16px;}
+  #memberCounter{font-size:16px;}
 }
 </style>
 </head>
-
 <body>
 
 <canvas id="bgCanvas"></canvas>
 
 <div class="container">
-  <h1 class="title">XMONEY</h1>
-  <p class="subtitle">The Billionaire Circle</p>
-  <p class="subtitle">We Print Money Like a Factory</p>
-  <p class="subtitle">Forex Is Our Game</p>
+<h1 class="title">Xmoney</h1>
+<p class="subtitle">The Billionaire Circle</p>
+<p class="subtitle">We Print Money Like a Factory</p>
+<p class="subtitle">Forex Is Our Game</p>
 
-  <div class="vip-card">
-    <h2 class="vip-title">VIP ZONE</h2>
-    <p class="vip-text">1 - Daily Forex Signals</p>
-    <p class="vip-text">2 - 55% - 60% Guaranteed Win Rate</p>
-    <p class="vip-text">3 - 3 Signals Per Day (Sometimes More)</p>
-    <button class="join-btn" onclick="joinVIP()">JOIN</button>
-    <div id="memberCounter">0 Members</div>
-  </div>
+<div class="vip-card">
+<h2 class="vip-title">VIP ZONE</h2>
+<p class="vip-text">1 - Daily Forex Signals</p>
+<p class="vip-text">2 - 55% - 60% Guaranteed Win Rate</p>
+<p class="vip-text">3 - 3 Signals Per Day (Sometimes More)</p>
+<button class="join-btn" onclick="joinVIP()">JOIN</button>
+
+<!-- MEMBER COUNTER POSHT PLAKATES -->
+<div id="memberCounter">0 Members</div>
+</div>
 </div>
 
 <script>
-/* BACKGROUND PARTICLES */
 const canvas = document.getElementById("bgCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -157,6 +95,9 @@ function resize(){
 resize();
 window.addEventListener("resize", resize);
 
+/* =========================
+   NEURAL NETWORK ENGINE
+   ========================= */
 const nodes = [];
 const NODE_COUNT = 120;
 const MAX_DISTANCE = 150;
@@ -173,6 +114,7 @@ for(let i=0;i<NODE_COUNT;i++){
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
+
   const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
   gradient.addColorStop(0,"#050510");
   gradient.addColorStop(1,"#000000");
@@ -217,10 +159,12 @@ function animate(){
   requestAnimationFrame(animate);
 }
 
-/* MEMBER COUNTER */
+/* =========================
+   MEMBER COUNTER 0 → 1752 IN 4 SEC
+   ========================= */
 const counterEl = document.getElementById("memberCounter");
 const targetNumber = 1752;
-const duration = 4000;
+const duration = 4000; // 4 sekonda
 let startTime = null;
 
 function countUp(timestamp){
@@ -240,6 +184,3 @@ requestAnimationFrame(countUp);
 function joinVIP(){ alert("Welcome to the VIP zone!"); }
 animate();
 </script>
-
-</body>
-</html>
