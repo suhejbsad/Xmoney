@@ -28,7 +28,7 @@ left: 0;
 width: 100%;
 height: 100%;
 z-index: -1;
-filter: blur(2px);
+filter: blur(1.5px);
 opacity: 0.9;
 }
 
@@ -168,24 +168,30 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let candles = [];
+let numbers = [];
 let offset = 0;
 
-// Gjenero candles me lartësi dhe wicks
+// Gjenero candles
 function generateCandles(){
     candles = [];
+    numbers = [];
     let base = canvas.height / 2;
 
-    for(let i=0; i<150; i++){
+    for(let i=0; i<100; i++){
         let open = base + (Math.random() - 0.5) * 200;
         let close = open + (Math.random() - 0.5) * 150;
         let high = Math.max(open, close) + Math.random() * 80;
         let low = Math.min(open, close) - Math.random() * 80;
 
-        candles.push({ x: i * 20, open, close, high, low });
+        candles.push({ x: i * 25, open, close, high, low });
+
+        // Numrat gold lart candle
+        let price = Math.floor(1000 + Math.random()*900);
+        numbers.push({ x: i * 25 + 5, y: base - Math.random()*150, value: price });
     }
 }
 
-// Draw grid Forex-style
+// Draw grid
 function drawGrid(){
     ctx.strokeStyle = "rgba(255,255,255,0.05)";
     ctx.lineWidth = 1;
@@ -211,7 +217,7 @@ function drawCandles(){
         let x = c.x - offset;
 
         // Wick
-        ctx.strokeStyle = "rgba(255,255,255,0.2)";
+        ctx.strokeStyle = "rgba(173,216,230,0.6)"; // blu e lehte
         ctx.beginPath();
         ctx.moveTo(x + 5, c.high);
         ctx.lineTo(x + 5, c.low);
@@ -219,23 +225,34 @@ function drawCandles(){
 
         // Body
         if(c.close > c.open){
-            ctx.fillStyle = "rgba(255,255,255,0.3)";
+            ctx.fillStyle = "rgba(0,191,255,0.5)"; // blu
             ctx.fillRect(x, c.open, 10, c.close - c.open);
         } else {
-            ctx.fillStyle = "rgba(255,255,255,0.1)";
+            ctx.fillStyle = "rgba(255,255,255,0.3)"; // bardh
             ctx.fillRect(x, c.close, 10, c.open - c.close);
         }
     });
 }
 
-// Animacion lëvizëse
+// Draw numbers gold
+function drawNumbers(){
+    ctx.fillStyle = "gold";
+    ctx.font = "14px Poppins";
+    numbers.forEach(n=>{
+        n.y -= 0.5; // ngrihen ngadalë
+        ctx.fillText(n.value, n.x - offset, n.y);
+    });
+}
+
+// Animate background
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     drawGrid();
     drawCandles();
+    drawNumbers();
 
     offset += 1;
-    if(offset > candles.length * 20){
+    if(offset > candles.length * 25){
         generateCandles();
         offset = 0;
     }
@@ -246,7 +263,7 @@ function animate(){
 generateCandles();
 animate();
 
-// Resize i responsive
+// Responsive
 window.addEventListener("resize", ()=>{
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
