@@ -75,54 +75,59 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.156.0/build/three.min.js"></script>
 <script>
-// ---------------- Holographic Grid Background ----------------
+// ---------------- Sky / Space Scene Background ----------------
 const canvas = document.getElementById("bgCanvas");
-const renderer = new THREE.WebGLRenderer({canvas: canvas, antialias:true});
+const renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
 const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x000000, 0.02);
+
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
-camera.position.set(0,2,5);
+camera.position.z = 10;
 
-// Grid Group
-const gridGroup = new THREE.Group();
-scene.add(gridGroup);
-
-const gridMaterial = new THREE.LineBasicMaterial({color:0x00ffff, transparent:true, opacity:0.6});
-const gridSize = 20;
-const gridDivisions = 40;
-
-for(let i=-gridSize;i<=gridSize;i+=gridSize/gridDivisions){
-  const geometryX = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-gridSize,0,i), new THREE.Vector3(gridSize,0,i)]);
-  const geometryZ = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(i,0,-gridSize), new THREE.Vector3(i,0,gridSize)]);
-  gridGroup.add(new THREE.Line(geometryX, gridMaterial));
-  gridGroup.add(new THREE.Line(geometryZ, gridMaterial));
+// Star field
+const starGeometry = new THREE.BufferGeometry();
+const starCount = 2000;
+const starPositions = new Float32Array(starCount*3);
+for(let i=0;i<starCount*3;i++){
+  starPositions[i] = (Math.random()-0.5)*200;
 }
+starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions,3));
+const starMaterial = new THREE.PointsMaterial({color:0xffffff, size:0.1});
+const stars = new THREE.Points(starGeometry, starMaterial);
+scene.add(stars);
 
-// Floating points above grid
-const pointGeometry = new THREE.SphereGeometry(0.05,8,8);
-const pointMaterial = new THREE.MeshBasicMaterial({color:0x00ffff});
-const points = [];
-for(let i=0;i<150;i++){
-  const point = new THREE.Mesh(pointGeometry, pointMaterial);
-  point.position.set((Math.random()-0.5)*gridSize*2, Math.random()*2, (Math.random()-0.5)*gridSize*2);
-  scene.add(point);
-  points.push(point);
-}
+// Aurora / nebula planes
+const auroraMaterial = new THREE.MeshBasicMaterial({color:0x00ffff, side:THREE.DoubleSide, transparent:true, opacity:0.05});
+const auroraGeometry = new THREE.PlaneGeometry(100,50);
+const aurora1 = new THREE.Mesh(auroraGeometry, auroraMaterial);
+aurora1.rotation.x = Math.PI/2; aurora1.position.y = -5; aurora1.position.z = -20;
+scene.add(aurora1);
+const aurora2 = new THREE.Mesh(auroraGeometry, auroraMaterial.clone());
+aurora2.rotation.x = Math.PI/2; aurora2.position.y = 0; aurora2.position.z = -40;
+scene.add(aurora2);
+
+// Small rotating planets
+const planetGeometry = new THREE.SphereGeometry(0.5,32,32);
+const planetMaterial1 = new THREE.MeshBasicMaterial({color:0xff8800});
+const planet1 = new THREE.Mesh(planetGeometry, planetMaterial1);
+planet1.position.set(-5,2,-15); scene.add(planet1);
+
+const planetMaterial2 = new THREE.MeshBasicMaterial({color:0x8888ff});
+const planet2 = new THREE.Mesh(planetGeometry, planetMaterial2);
+planet2.position.set(6,-1,-25); scene.add(planet2);
 
 function animate(){
   requestAnimationFrame(animate);
-  const time = performance.now() * 0.001;
+  const time = performance.now()*0.001;
 
-  // Rotate grid slowly
-  gridGroup.rotation.y = time * 0.05;
-  gridGroup.rotation.x = Math.sin(time*0.2)*0.05;
+  stars.rotation.y = time*0.01;
+  aurora1.position.z += 0.02; if(aurora1.position.z>10) aurora1.position.z=-50;
+  aurora2.position.z += 0.015; if(aurora2.position.z>10) aurora2.position.z=-50;
 
-  // Make points pulse
-  points.forEach(p=>{
-    p.position.y = Math.sin(time + p.position.x + p.position.z)*0.5 + 1;
-  });
+  planet1.rotation.y += 0.01; planet2.rotation.y += 0.008;
 
   renderer.render(scene,camera);
 }
@@ -139,7 +144,6 @@ const counterEl = document.getElementById("memberCounter");
 const targetNumber = 1752;
 const duration = 4000;
 let startTime = null;
-
 function countUp(timestamp){
   if(!startTime) startTime = timestamp;
   let progress = timestamp - startTime;
