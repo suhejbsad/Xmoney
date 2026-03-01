@@ -91,79 +91,140 @@ resize();
 window.addEventListener("resize", resize);
 
 /* =========================
-   3D CRYSTAL WHALES ENGINE
+   SHARK INTRO ENGINE
    ========================= */
 
-class CrystalWhale {
-  constructor(x,y,scale,dir){
-    this.x=x;
-    this.y=y;
-    this.scale=scale;
-    this.dir=dir;
-    this.angle=0;
-    this.depth=Math.random()*0.5+0.5;
-  }
+let intro = true;
+let introStart = null;
+let sharkAngle = 0;
+let sharkScale = 1;
 
-  draw(){
-    ctx.save();
-    ctx.translate(this.x,this.y);
-    ctx.scale(this.scale*this.depth,this.scale*this.depth);
-    ctx.rotate(Math.sin(this.angle)*0.1);
+function drawShark(x,y,scale,openMouth){
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.scale(scale,scale);
+  ctx.rotate(sharkAngle);
 
-    let glow = 20 + Math.sin(this.angle*2)*15;
+  ctx.shadowColor="cyan";
+  ctx.shadowBlur=40;
 
-    ctx.shadowColor = "cyan";
-    ctx.shadowBlur = glow;
+  let grad = ctx.createLinearGradient(-150,0,150,0);
+  grad.addColorStop(0,"#00f0ff");
+  grad.addColorStop(0.5,"#ffffff");
+  grad.addColorStop(1,"#00f0ff");
+  ctx.fillStyle=grad;
 
-    let gradient = ctx.createLinearGradient(-100,0,100,0);
-    gradient.addColorStop(0,"rgba(0,255,255,0.2)");
-    gradient.addColorStop(0.5,"rgba(0,255,255,0.9)");
-    gradient.addColorStop(1,"rgba(0,255,255,0.2)");
+  ctx.beginPath();
+  ctx.moveTo(-150,0);
+  ctx.lineTo(-60,-40);
+  ctx.lineTo(80,-30);
+  ctx.lineTo(150,0);
+  ctx.lineTo(80,30);
+  ctx.lineTo(-60,40);
+  ctx.closePath();
+  ctx.fill();
 
-    ctx.fillStyle = gradient;
-
+  if(openMouth){
+    ctx.fillStyle="black";
     ctx.beginPath();
-    ctx.moveTo(-120,0);
-    ctx.lineTo(-60,-25);
-    ctx.lineTo(40,-35);
-    ctx.lineTo(120,0);
-    ctx.lineTo(40,35);
-    ctx.lineTo(-60,25);
+    ctx.moveTo(150,0);
+    ctx.lineTo(110,-35);
+    ctx.lineTo(110,35);
     ctx.closePath();
     ctx.fill();
-
-    ctx.shadowBlur = 0;
-    ctx.restore();
   }
 
-  update(){
-    this.angle += 0.01;
-    this.x += this.dir * 0.3 * this.depth;
-    this.y += Math.sin(this.angle)*0.2;
+  ctx.restore();
+  ctx.shadowBlur=0;
+}
 
-    if(this.dir>0 && this.x > canvas.width+200) this.x=-200;
-    if(this.dir<0 && this.x < -200) this.x=canvas.width+200;
+function sharkIntro(timestamp){
+  if(!introStart) introStart=timestamp;
+  let elapsed = timestamp-introStart;
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="black";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  if(elapsed < 3000){
+    sharkAngle += 0.2;
+    let radius = Math.min(canvas.width,canvas.height)/3;
+    let x = canvas.width/2 + Math.cos(elapsed*0.01)*radius;
+    let y = canvas.height/2 + Math.sin(elapsed*0.01)*radius;
+    drawShark(x,y,1,false);
+    requestAnimationFrame(sharkIntro);
+  }
+  else if(elapsed < 4500){
+    sharkScale += 0.05;
+    drawShark(canvas.width/2,canvas.height/2,sharkScale,true);
+    requestAnimationFrame(sharkIntro);
+  }
+  else{
+    intro=false;
+    animate(); 
   }
 }
 
-const whales = [
-  new CrystalWhale(canvas.width/2, canvas.height*0.25, 1.2, 0.2),  // lart
-  new CrystalWhale(-200, canvas.height*0.6, 1, 1),                 // majtas
-  new CrystalWhale(canvas.width+200, canvas.height*0.75, 1.1, -1)  // djathtas
-];
+/* =========================
+   ORIGINAL NEURAL NETWORK
+   ========================= */
+
+const nodes = [];
+const NODE_COUNT = 120;
+const MAX_DISTANCE = 150;
+
+for(let i=0;i<NODE_COUNT;i++){
+  nodes.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    vx: (Math.random()-0.5)*0.7,
+    vy: (Math.random()-0.5)*0.7,
+    pulse: Math.random()*Math.PI*2
+  });
+}
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  let ocean = ctx.createLinearGradient(0,0,0,canvas.height);
-  ocean.addColorStop(0,"#00111a");
-  ocean.addColorStop(1,"#000000");
-  ctx.fillStyle=ocean;
+  const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+  gradient.addColorStop(0,"#050510");
+  gradient.addColorStop(1,"#000000");
+  ctx.fillStyle = gradient;
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  whales.forEach(w=>{
-    w.update();
-    w.draw();
+  for(let i=0;i<nodes.length;i++){
+    let n = nodes[i];
+    n.x += n.vx;
+    n.y += n.vy;
+    if(n.x<0||n.x>canvas.width) n.vx*=-1;
+    if(n.y<0||n.y>canvas.height) n.vy*=-1;
+
+    for(let j=i+1;j<nodes.length;j++){
+      let n2 = nodes[j];
+      let dx = n.x - n2.x;
+      let dy = n.y - n2.y;
+      let dist = Math.sqrt(dx*dx+dy*dy);
+      if(dist < MAX_DISTANCE){
+        ctx.strokeStyle = "rgba(0,200,255,"+(1-dist/MAX_DISTANCE)+")";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(n.x,n.y);
+        ctx.lineTo(n2.x,n2.y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  nodes.forEach(n=>{
+    n.pulse += 0.05;
+    let glow = 2 + Math.sin(n.pulse)*1.5;
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,glow,0,Math.PI*2);
+    ctx.fillStyle = "rgba(0,255,255,0.9)";
+    ctx.shadowColor = "cyan";
+    ctx.shadowBlur = 15;
+    ctx.fill();
+    ctx.shadowBlur = 0;
   });
 
   requestAnimationFrame(animate);
@@ -191,9 +252,9 @@ function countUp(timestamp){
 }
 
 requestAnimationFrame(countUp);
+requestAnimationFrame(sharkIntro);
 
 function joinVIP(){ alert("Welcome to the VIP zone!"); }
-animate();
 </script>
 
 </body>
