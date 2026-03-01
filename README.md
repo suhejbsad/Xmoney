@@ -40,30 +40,19 @@ padding: 100px 20px;
 
 /* Xmoney Title */
 .title {
-font-size: 60px;
+font-size: 80px;
 font-weight: 800;
 position: relative;
 opacity: 0;
-transform: translateX(-100%);
-animation: slideIn 1.5s forwards;
+animation: appearStars 2s forwards;
+letter-spacing: 5px;
 }
 
-/* Shine Effect */
-.title::after {
-content: '';
-position: absolute;
-top: 0;
-left: -100%;
-width: 50%;
-height: 100%;
-background: linear-gradient(120deg, transparent, rgba(255,255,255,0.8), transparent);
-animation: shine 3s infinite;
-}
-
-@keyframes shine {
-0% { left: -100%; }
-50% { left: 120%; }
-100% { left: 120%; }
+/* Animacion titullit si yje */
+@keyframes appearStars {
+0% { opacity: 0; text-shadow: 0 0 0px #fff; }
+50% { opacity: 1; text-shadow: 0 0 20px #fff, 0 0 40px #fff; }
+100% { opacity: 1; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff; }
 }
 
 /* Subtitle */
@@ -89,24 +78,26 @@ transform: translateX(0);
 /* VIP Card */
 .vip-card {
 margin: 80px auto;
-background: rgba(0,0,0,0.8);
+background: rgba(255,255,255,0.05); /* Pak e tejdukshme */
 padding: 40px;
 width: 90%;
 max-width: 400px;
 border-radius: 15px;
-box-shadow: 0 0 30px rgba(0,0,0,0.8);
+box-shadow: 0 0 30px rgba(0,0,0,0.8); /* Hije e theksuar */
 transition: 0.4s;
+backdrop-filter: blur(5px);
 }
 
 .vip-card:hover {
 transform: translateY(-10px);
-box-shadow: 0 0 40px gold;
+box-shadow: 0 0 40px rgba(255,255,255,0.2);
 }
 
 .vip-title {
 font-family: 'Cinzel', serif;
 font-size: 28px;
 margin-bottom: 20px;
+color: #fff;
 }
 
 .vip-text {
@@ -114,6 +105,7 @@ margin: 10px 0;
 opacity: 0;
 transform: translateX(-100%);
 animation: slideIn 1.5s forwards;
+color: #eee;
 }
 
 .vip-text:nth-child(2) { animation-delay: 1.2s; }
@@ -133,13 +125,13 @@ transition: 0.3s;
 }
 
 .join-btn:hover {
-background: gold;
+background: white;
 color: black;
 }
 
 /* Responsive */
 @media(max-width:768px){
-.title { font-size: 40px; }
+.title { font-size: 50px; }
 .subtitle { font-size: 16px; }
 }
 
@@ -195,7 +187,7 @@ function generateCandles(){
 
 // Draw grid Forex-style
 function drawGrid(){
-    ctx.strokeStyle = "rgba(255,215,0,0.08)";
+    ctx.strokeStyle = "rgba(255,255,255,0.05)";
     ctx.lineWidth = 1;
 
     for(let i=0; i<canvas.width; i+=80){
@@ -218,8 +210,8 @@ function drawCandles(){
     candles.forEach(c=>{
         let x = c.x - offset;
 
-        // Vetka (wick)
-        ctx.strokeStyle = "rgba(255,215,0,0.6)";
+        // Wick
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
         ctx.beginPath();
         ctx.moveTo(x + 5, c.high);
         ctx.lineTo(x + 5, c.low);
@@ -227,10 +219,10 @@ function drawCandles(){
 
         // Body
         if(c.close > c.open){
-            ctx.fillStyle = "gold";
+            ctx.fillStyle = "rgba(255,255,255,0.3)";
             ctx.fillRect(x, c.open, 10, c.close - c.open);
         } else {
-            ctx.fillStyle = "white";
+            ctx.fillStyle = "rgba(255,255,255,0.1)";
             ctx.fillRect(x, c.close, 10, c.open - c.close);
         }
     });
