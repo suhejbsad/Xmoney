@@ -9,22 +9,37 @@
 * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
 body {background:#000; color:white; overflow:hidden;}
 canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
-.container {text-align:center; padding:100px 20px; position:relative; z-index:1;}
+.container {text-align:center; padding:100px 20px; position:relative; z-index:1; perspective:1000px;}
 
-/* ------------------- Xmoney GLASS 3D ------------------- */
+/* ------------------- Xmoney 3D ANIMATED ------------------- */
 .title {
   font-family:'Cinzel', serif;
-  font-size:240px;
-  letter-spacing:5px;
-  color:rgba(255,255,255,0.95);
+  font-size:320px; /* 3x më i madh */
+  letter-spacing:8px;
+  color:#ffffff;
   opacity:0;
-  animation:fadeIn 2s forwards;
+  transform-style:preserve-3d;
+
+  animation:
+    fadeIn 2s forwards,
+    float3D 4s ease-in-out infinite;
 
   text-shadow:
-    0 0 5px rgba(255,255,255,0.9),
-    0 0 20px rgba(255,255,255,0.6),
-    0 0 40px rgba(255,255,255,0.4),
-    5px 5px 15px rgba(0,0,0,0.7);
+    1px 1px 0 #ddd,
+    2px 2px 0 #ccc,
+    3px 3px 0 #bbb,
+    4px 4px 0 #aaa,
+    5px 5px 0 #999,
+    6px 6px 15px rgba(0,0,0,0.8);
+}
+
+/* 3D Rotating Motion */
+@keyframes float3D {
+  0%   { transform: rotateX(0deg) rotateY(0deg); }
+  25%  { transform: rotateX(8deg) rotateY(-8deg); }
+  50%  { transform: rotateX(0deg) rotateY(0deg); }
+  75%  { transform: rotateX(-8deg) rotateY(8deg); }
+  100% { transform: rotateX(0deg) rotateY(0deg); }
 }
 
 .subtitle {
@@ -65,7 +80,7 @@ canvas {position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;}
 }
 
 @media(max-width:768px){
-  .title{font-size:120px;}
+  .title{font-size:140px;}
   .subtitle{font-size:16px;}
   #memberCounter{font-size:16px;}
 }
