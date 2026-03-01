@@ -60,47 +60,81 @@ resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 /* ===========================
-   FLUID LIQUID WAVE ENGINE
+   LOW POLY GEOMETRY ENGINE
    =========================== */
 
+const spacing = 80;
+let points = [];
 let time = 0;
 
-function drawFluidBackground(){
+function createGrid(){
+    points = [];
+    for(let x = 0; x <= canvas.width + spacing; x += spacing){
+        for(let y = 0; y <= canvas.height + spacing; y += spacing){
+            points.push({
+                x:x,
+                y:y,
+                baseX:x,
+                baseY:y
+            });
+        }
+    }
+}
+createGrid();
+
+window.addEventListener("resize", createGrid);
+
+function drawLowPoly(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    // Deep gradient base
+    // Dark gradient base
     let gradient = ctx.createLinearGradient(0,0,0,canvas.height);
     gradient.addColorStop(0,"#0f2027");
-    gradient.addColorStop(0.5,"#203a43");
-    gradient.addColorStop(1,"#2c5364");
+    gradient.addColorStop(1,"#203a43");
     ctx.fillStyle = gradient;
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    drawWave(0.6, 40, 0.002, "rgba(0,255,255,0.15)");
-    drawWave(0.5, 60, 0.0015, "rgba(0,150,255,0.12)");
-    drawWave(0.4, 80, 0.001, "rgba(0,100,255,0.10)");
+    time += 0.01;
+
+    // Animate points
+    points.forEach(p=>{
+        p.y = p.baseY + Math.sin(p.baseX * 0.01 + time) * 25;
+    });
+
+    ctx.strokeStyle = "rgba(0,255,200,0.25)";
+    ctx.lineWidth = 1;
+
+    for(let x = 0; x < canvas.width/spacing; x++){
+        for(let y = 0; y < canvas.height/spacing; y++){
+
+            let i = x * Math.floor(canvas.height/spacing + 1) + y;
+
+            let p1 = points[i];
+            let p2 = points[i + 1];
+            let p3 = points[i + Math.floor(canvas.height/spacing + 1)];
+            let p4 = points[i + Math.floor(canvas.height/spacing + 1) + 1];
+
+            if(p1 && p2 && p3){
+                drawTriangle(p1,p2,p3);
+            }
+            if(p2 && p3 && p4){
+                drawTriangle(p2,p3,p4);
+            }
+        }
+    }
 }
 
-function drawWave(speed, amplitude, frequency, color){
+function drawTriangle(a,b,c){
     ctx.beginPath();
-    ctx.moveTo(0, canvas.height);
-
-    for(let x = 0; x <= canvas.width; x++){
-        let y = canvas.height/2 +
-                Math.sin((x * frequency) + time * speed) * amplitude;
-        ctx.lineTo(x, y);
-    }
-
-    ctx.lineTo(canvas.width, canvas.height);
+    ctx.moveTo(a.x,a.y);
+    ctx.lineTo(b.x,b.y);
+    ctx.lineTo(c.x,c.y);
     ctx.closePath();
-
-    ctx.fillStyle = color;
-    ctx.fill();
+    ctx.stroke();
 }
 
 function animate(){
-    time += 1;
-    drawFluidBackground();
+    drawLowPoly();
     requestAnimationFrame(animate);
 }
 
